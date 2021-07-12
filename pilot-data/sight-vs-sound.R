@@ -26,7 +26,7 @@ library(psych)
 pwr.anova.test(n = , k = 3 , f = 0.4, sig.level = 0.017, power = 0.8)
 
 #Specify data download location
-file.data <- "/Users/chibagakuto/Desktop/pilot-data/sight-vs-sound.csv"
+file.data <- "/Users/chibagakuto/Desktop/pilot-data/sight-vs-sound_demo.csv"
 
 #Load pilot data
 data<-read.csv(file=file.data)
