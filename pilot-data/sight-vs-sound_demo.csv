@@ -1,9 +1,0 @@
-ID,group,w,l,winner,loser
-1,audio-visual,3,3,100,100
-2,audio-visual,2,2,66.66666667,66.66666667
-3,audio-only,3,1,100,33.33333333
-4,audio-only,1,1,33.33333333,33.33333333
-5,audio-only,2,0,66.66666667,0
-6,visual-only,1,0,33.33333333,0
-7,visual-only,2,2,66.66666667,66.66666667
-8,visual-only,0,1,0,33.33333333
