@@ -30,7 +30,7 @@ library(ggsci)
 pwr.t.test(n =, d = 0.4, sig.level = .025, power = .95, type=c("paired"), alternative=("two.sided"))
 
 #Specify data download location
-file.data <- "/Volumes/2021/01_SFC/spring-semester/zemi/sight-vs-sound_02/pilot_data/sight-vs-sound_6s-5.csv"
+file.data <- "/Volumes/2021/01_SFC/spring-semester/zemi/sight-vs-sound_02/pilot_data/sight-vs-sound.csv"
 
 #Load pilot data
 data<-read.csv(file=file.data)
