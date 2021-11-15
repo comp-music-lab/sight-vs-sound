@@ -22,8 +22,8 @@ for (i in 1:NUMBER_OF_PARTICIPANT) {
     idx <- R[, 1] == participant_id[i] & R[, 3] == domain[j]
     T_df[counter, 1] <- participant_id[i]
     T_df[counter, 2] <- domain[j]
-    T_df[counter, 3] <- sum(R[idx, 10]) / sum(idx)
-    T_df[counter, 4] <- sum(R[idx, 11]) / sum(idx)
+    T_df[counter, 3] <- sum(R[idx, 10]) / sum(idx) * 100
+    T_df[counter, 4] <- sum(R[idx, 11]) / sum(idx) * 100
     
     counter <- counter + 1
   }
