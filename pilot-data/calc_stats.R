@@ -29,6 +29,24 @@ for (i in 1:NUMBER_OF_PARTICIPANT) {
   }
 }
 
+### 3-sample test ###
+for (i in 1:(NUMBER_OF_DOMAIN - 1)) {
+  for (j in (i + 1):NUMBER_OF_DOMAIN) {
+    idx_i <- T_df[, 2] == domain[i]
+    idx_j <- T_df[, 2] == domain[j]
+    
+    x <- T_df[idx_i, 3]
+    y <- T_df[idx_j, 3]
+    pval <- ks.test(x, y)
+    cat(paste("2-samples KS test, High-var: ", i, ", ", j, " - ", pval$p.value, "\n", sep = ""))
+    
+    x <- T_df[idx_i, 4]
+    y <- T_df[idx_j, 4]
+    pval <- ks.test(x, y)
+    cat(paste("2-samples KS test, Low-var : ", i, ", ", j, " - ", pval$p.value, "\n", sep = ""))
+  }
+}
+
 ### plot ###
 p <- ggplot(data = T_df, aes(x = domain, y = match_high_var, group = domain, color = domain))
 p <- p + geom_violin(trim = TRUE, adjust = 0.5)
