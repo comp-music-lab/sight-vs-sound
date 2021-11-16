@@ -1,5 +1,6 @@
 ### Load library ###
 library(ggplot2)
+library(gridExtra)
 
 ### Read data ###
 R <- read.csv("./data-relative_matching.csv", header = TRUE)
@@ -9,6 +10,31 @@ domain <- unique(R[, 3])
 
 NUMBER_OF_PARTICIPANT <- length(participant_id)
 NUMBER_OF_DOMAIN <- length(domain)
+
+### Data-wise predicted ranking plot ###
+data_id <- unique(R[, 2])
+
+for (i in 1:length(data_id)) {
+  idx <- R[, 2] == i
+  
+  list_g <- vector(mode = "list", length = 3)
+  
+  for (k in 1:3) {
+    g <- ggplot()
+    g <- g + geom_point(data = R[idx & (R[, 4] == k), ], aes(x = domain, y = rank_pred_1st, color = domain),
+                            position = position_jitter(w = 0.1, h = 0))
+    g <- g + geom_point(data = R[idx & (R[, 5] == k), ], aes(x = domain, y = rank_pred_2nd, color = domain),
+                            position = position_jitter(w = 0.1, h = 0))
+    g <- g + geom_point(data = R[idx & (R[, 6] == k), ], aes(x = domain, y = rank_pred_3rd, color = domain),
+                            position = position_jitter(w = 0.1, h = 0))
+    list_g[[k]] <- g + theme(legend.position = "none") + 
+    ylab(paste("Predicted rank for the rank-", k, " performer", sep = "")) + 
+    theme(axis.title.x = element_blank())
+  }
+  
+  g <- grid.arrange(grobs = list_g, ncol = 3, top = paste("Data ID = ", i, sep = ""))
+  ggsave(paste("./voting_per_data_", i, ".png", sep = ""), plot = g)
+}
 
 ### Output data ###
 T_df <- data.frame(matrix(NA, nrow = NUMBER_OF_PARTICIPANT*NUMBER_OF_DOMAIN, ncol = 4))
