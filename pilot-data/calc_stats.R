@@ -27,9 +27,9 @@ for (i in 1:length(data_id)) {
                             position = position_jitter(w = 0.1, h = 0))
     g <- g + geom_point(data = R[idx & (R[, 6] == k), ], aes(x = domain, y = rank_pred_3rd, color = domain),
                             position = position_jitter(w = 0.1, h = 0))
-    list_g[[k]] <- g + theme(legend.position = "none") + 
+    list_g[[k]] <- g + theme(legend.position = "none", axis.title.x = element_blank()) + 
     ylab(paste("Predicted rank for the rank-", k, " performer", sep = "")) + 
-    theme(axis.title.x = element_blank())
+    scale_y_reverse(limits = c(3, 1))
   }
   
   g <- grid.arrange(grobs = list_g, ncol = 3, top = paste("Data ID = ", i, sep = ""))
