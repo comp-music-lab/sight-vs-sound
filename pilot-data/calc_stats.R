@@ -12,12 +12,11 @@ NUMBER_OF_PARTICIPANT <- length(participant_id)
 NUMBER_OF_DOMAIN <- length(domain)
 
 ### Data-wise predicted ranking plot ###
-data_id <- unique(R[, 2])
+data_id <- sort(unique(R[, 2]))
+list_g <- vector(mode = "list", length = 3)
 
 for (i in 1:length(data_id)) {
-  idx <- R[, 2] == i
-  
-  list_g <- vector(mode = "list", length = 3)
+  idx <- R[, 2] == data_id[i]
   
   for (k in 1:3) {
     g <- ggplot()
@@ -32,8 +31,8 @@ for (i in 1:length(data_id)) {
     scale_y_reverse(limits = c(3, 1))
   }
   
-  g <- grid.arrange(grobs = list_g, ncol = 3, top = paste("Data ID = ", i, sep = ""))
-  ggsave(paste("./voting_per_data_", i, ".png", sep = ""), plot = g)
+  g <- grid.arrange(grobs = list_g, ncol = 3, top = paste("Data ID = ", data_id[i], sep = ""))
+  ggsave(paste("./voting_per_data_", data_id[i], ".png", sep = ""), plot = g)
 }
 
 ### Output data ###
