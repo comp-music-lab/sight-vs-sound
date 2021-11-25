@@ -2,8 +2,8 @@
 library(rankFD)
 
 #####
-filepath_data_exp2 = "./SBS_exp2.csv"
-filepath_data_exp3 = "./SBS_exp3.csv"
+filepath_data_exp2 = "./data/SBS_exp2.csv"
+filepath_data_exp3 = "./data/SBS_exp3.csv"
 
 #####
 T1 = read.table(filepath_data_exp2, header = TRUE, sep = ",");
@@ -80,3 +80,7 @@ model = rankFD(score ~ domain * var_cond, data = T, alpha = 0.05, CI.method = "l
 #5      2        1     0.7150    0.0290 0.6549 0.7683
 #3      3        0     0.4936    0.0249 0.4451 0.5423
 #6      3        1     0.3939    0.0336 0.3303 0.4614
+#
+#
+#(partial eta squared based on approximated ANOVA type statistics)
+#eta_p = (31.9079 * 1.9938)/(31.9079 * 1.9938 + 349.7635)
