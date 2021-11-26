@@ -42,12 +42,16 @@ for (i in 1:NUM_PARTICIPANT) {
 counter <- 1
 
 for (i in 1:NUM_PARTICIPANT) {
-  participant_i <- matrix(R[1, ], nrow = NUM_EXPERIMENT, byrow = TRUE)
+  participant_i <- matrix(R[i, ], nrow = NUM_EXPERIMENT, byrow = TRUE)
   
   for (j in 1:NUM_EXPERIMENT) {
     T_df[counter, 6 + as.numeric(participant_i[j, 1])] <- 1
     T_df[counter, 6 + as.numeric(participant_i[j, 2])] <- 3
     T_df[counter, 6 + setdiff(c(1, 2, 3), c(participant_i[j, 1], participant_i[j, 2]))] <- 2
+    
+    if (counter == 11) {
+      print("hey")
+    }
     
     ##
     ranking <- c(as.numeric(T_df[counter, 4:6]))

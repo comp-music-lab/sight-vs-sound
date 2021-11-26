@@ -15,25 +15,78 @@ NUMBER_OF_DOMAIN <- length(domain)
 data_id <- sort(unique(R[, 2]))
 list_g <- vector(mode = "list", length = 3)
 
+gR_1 <- data.frame(V1 = character(), V2 = numeric())
+gR_2 <- data.frame(V1 = character(), V2 = numeric())
+gR_3 <- data.frame(V1 = character(), V2 = numeric())
+
 for (i in 1:length(data_id)) {
   idx <- R[, 2] == data_id[i]
   
   for (k in 1:3) {
+    R_1 <- R[idx & (R[, 4] == k), ]
+    R_2 <- R[idx & (R[, 5] == k), ]
+    R_3 <- R[idx & (R[, 6] == k), ]
+    R_k <- as.data.frame(rbind(cbind(R_1$domain, R_1$rank_pred_1st),
+      cbind(R_2$domain, R_2$rank_pred_2nd),
+      cbind(R_3$domain, R_3$rank_pred_3rd)))
+    R_k[, 2] <- as.numeric(R_k[, 2])
+    
+    if (k == 1) {
+      gR_1 <- rbind(gR_1, R_k)
+    } else if (k == 2) {
+      gR_2 <- rbind(gR_2, R_k)
+    } else if (k == 3) {
+      gR_3 <- rbind(gR_3, R_k)
+    }
+    
     g <- ggplot()
-    g <- g + geom_point(data = R[idx & (R[, 4] == k), ], aes(x = domain, y = rank_pred_1st, color = domain),
-                            position = position_jitter(w = 0.1, h = 0))
-    g <- g + geom_point(data = R[idx & (R[, 5] == k), ], aes(x = domain, y = rank_pred_2nd, color = domain),
-                            position = position_jitter(w = 0.1, h = 0))
-    g <- g + geom_point(data = R[idx & (R[, 6] == k), ], aes(x = domain, y = rank_pred_3rd, color = domain),
-                            position = position_jitter(w = 0.1, h = 0))
+    g <- g + geom_point(data = R_k, aes(x = V1, y = V2, color = V1),
+                        position = position_dodge2(width = 0.5, preserve = "total"), alpha = 0.8)
+    
     list_g[[k]] <- g + theme(legend.position = "none", axis.title.x = element_blank()) + 
     ylab(paste("Predicted rank for the rank-", k, " performer", sep = "")) + 
-    scale_y_reverse(limits = c(3, 1))
+    scale_y_reverse(limits = c(3.5, 0.5))
   }
   
   g <- grid.arrange(grobs = list_g, ncol = 3, top = paste("Data ID = ", data_id[i], sep = ""))
   ggsave(paste("./voting_per_data_", data_id[i], ".png", sep = ""), plot = g)
 }
+
+####
+list_g[[1]] <- ggplot() + geom_point(data = gR_1, aes(x = V1, y = V2, color = V1),
+                    position = position_dodge2(width = 0.5, preserve = "total"), alpha = 0.8) + 
+  theme(legend.position = "none", axis.title.x = element_blank(), axis.text.x = element_text(angle = -20)) + 
+  ylab("1st-placed performers") + 
+  scale_y_reverse(limits = c(3.5, 0.5), breaks = c(3, 2, 1), labels = c("Low", "2nd", "1st")) +
+  scale_x_discrete(labels = c("Audio-only", "Audio-Visual", "Visual-only"))
+list_g[[2]] <- ggplot() + geom_point(data = gR_2, aes(x = V1, y = V2, color = V1),
+                                     position = position_dodge2(width = 0.5, preserve = "total"), alpha = 0.8) + 
+  theme(legend.position = "none", axis.title.x = element_blank(), axis.text.x = element_text(angle = -20)) + 
+  ylab("2nd-placed performers") + 
+  scale_y_reverse(limits = c(3.5, 0.5), breaks = c(3, 2, 1), labels = c("Low", "2nd", "1st")) +
+  scale_x_discrete(labels = c("Audio-only", "Audio-Visual", "Visual-only"))
+list_g[[3]] <- ggplot() + geom_point(data = gR_3, aes(x = V1, y = V2, color = V1),
+                                     position = position_dodge2(width = 0.5, preserve = "total"), alpha = 0.8) + 
+  theme(legend.position = "none", axis.title.x = element_blank(), axis.text.x = element_text(angle = -20)) + 
+  ylab("Low-placed performers") + 
+  scale_y_reverse(limits = c(3.5, 0.5), breaks = c(3, 2, 1), labels = c("Low", "2nd", "1st")) +
+  scale_x_discrete(labels = c("Audio-only", "Audio-Visual", "Visual-only"))
+
+g <- grid.arrange(grobs = list_g, ncol = 3, top = "Predicted rank for each performer")
+ggsave("./voting_per_data_ALL.png", plot = g)
+
+gR_1$V3 <- 1
+gR_2$V3 <- 2
+gR_3$V3 <- 3
+gR <- rbind(gR_1, gR_2, gR_3)
+
+cat(paste("Correct choice: ",
+          sum(gR[gR$V3 == 1, ]$V2 == 1), ", ",
+          sum(gR[gR$V3 == 2, ]$V2 == 2), ", ",
+          sum(gR[gR$V3 == 3, ]$V2 == 3), "\n",
+          sep = ""))
+
+write.csv(gR, file = "./gR.csv", row.names = FALSE)
 
 ### Output data ###
 T_df <- data.frame(matrix(NA, nrow = NUMBER_OF_PARTICIPANT*NUMBER_OF_DOMAIN, ncol = 4))
