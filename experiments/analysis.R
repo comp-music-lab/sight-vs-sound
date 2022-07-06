@@ -6,11 +6,10 @@ library(nparLD)
 library(MBESS)
 library(MASS)
 library(ggplot2)
-library(gridExtra)
 
 ###### configuration ######
-INPUT_FILENAME <- "datatable_20220306.csv"
-OUTPUT_FILEID <- "analysis_20220306"
+INPUT_FILENAME <- "datatable_20220701.csv"
+OUTPUT_FILEID <- "analysis_20220701"
 DOMAIN <- c("Audio-only", "Visual-only")
 INSTRUMENT <- c("Piano", "Tsugaru shamisen")
 VARIANCE <- c("low-variance", "high-variance")
@@ -68,7 +67,6 @@ T <- t(C)%*%gC%*%C
 D <- diag(diag(T))
 Lmd <- diag(rep(1/(length(PARTICIPANT_ID) - 1), length(DOMAIN)*length(VARIANCE)))
 
-g_list <- vector(mode = "list", length = 2)
 printtext <- c("\n###### hypothesis testing 1 (Piano ~ low-variance) ######\n",
                "\n###### hypothesis testing 2 (Piano ~ high-variance) ######\n",
                "\n###### hypothesis testing 3 (Piano) ######\n",
@@ -131,22 +129,6 @@ for(i in 1:6) {
       ylim(0, 1)
     ggsave(plot = g_i, file = paste("./output/", OUTPUT_FILEID, "_H", i, ".png", sep = ""), width = G_WID, height = G_HEI)
     
-    k <- i/3
-    g_list[[k]] <- ggplot(data = df_i, aes(x = interaction(Domain, Variance), y = score, group = interaction(Domain, Variance), colour = Domain))
-    g_list[[k]] <- g_list[[k]] + geom_violin(adjust = G_VIOLIN_ADJUST, trim = TRUE, scale = G_VIOLIN_SCALE) + geom_jitter(width = G_JITTER_WID, height = 0)
-    g_list[[k]] <- g_list[[k]] + geom_line(data = df_i, aes(x = interaction(Domain, Variance), y = score, group = interaction(participant_id, Variance)),
-                                           color = "black", linetype = "dashed")
-    g_list[[k]] <- g_list[[k]] + geom_hline(yintercept = 0.5, linetype = "dotted", color = "grey27") + ylim(0, 1)
-    g_list[[k]] <- g_list[[k]] + stat_summary(fun = "mean", geom = "point", shape = 23, size = 2., fill = "black")
-    g_list[[k]] <- g_list[[k]] + labs(x = "", y = "Percent correct", title = plottitle[i]) +
-      theme(legend.position = "none", plot.title = element_text(hjust = 0.5), axis.text.x = element_text(size = G_X_SIZE, angle = G_X_ROTATE),
-            axis.text.y = element_text(size = G_Y_SIZE), axis.title.y = element_text(size = G_Y_SIZE)) + 
-      scale_x_discrete(limits = c("Audio-only.low-variance", "Visual-only.low-variance", "Audio-only.high-variance", "Visual-only.high-variance"),
-                       labels = c("Audio-only.low-variance" = "low-var ~ AO",
-                                  "Visual-only.low-variance" = "low-var ~ VO",
-                                  "Audio-only.high-variance" = "high-var ~ AO",
-                                  "Visual-only.high-variance" = "high-var ~ VO"))
-    
     pval_list[i] <- result_effectsize$ANOVA.test[3, 3]
     es_raw_list[i] <- result_effectsize$ANOVA.test[3, 1]
     
@@ -155,6 +137,7 @@ for(i in 1:6) {
     es_conv_list[i] <- es_raw_list[i] * df_effect/(es_raw_list[i] * df_effect + df_error)
     es_conv_list[i] <- es_conv_list[i] - (1 - es_conv_list[i]) * df_effect/df_error
     
+    k <- i/3
     ncf_lu <- conf.limits.ncf(F.value = es_raw_list[i], conf.level = 0.9, df.1 = df_effect, df.2 = df_error)
     petasq_lu_list[k, ] <- c(ncf_lu$Lower.Limit/(ncf_lu$Lower.Limit + df_effect + df_error + 1), 
                              ncf_lu$Upper.Limit/(ncf_lu$Upper.Limit + df_effect + df_error + 1))
@@ -162,13 +145,8 @@ for(i in 1:6) {
   }
 }
 
-###### Merge ggplots ######
-dev.new()
-g <- grid.arrange(grobs = g_list, nrow = 2)
-ggsave(file = paste("./output/", OUTPUT_FILEID, "_ggplots.png", sep = ""), plot = g,
-       width = G_WID, height = G_HEI)
-
 ###### p-value/effect size/test statistics ######
+print("")
 print(plottitle)
 
 cat("\np-value\n")

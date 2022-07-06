@@ -4,13 +4,17 @@ rm(list = ls())
 library(stringr)
 
 ###### configuration ######
-OUTPUT_FILENAME <- "datatable_20220306.csv"
+OUTPUT_FILENAME <- "datatable_20220701.csv"
 NUM_STIMULI <- 75
+NUM_DATA <- 50
+DATAID_INVALID <- c(21:25, 46:50)
 
 ###### read data ######
-T <- read.csv("./data/Sight vs Sound回答フォーム_1 （回答）_202203061008.csv", header = TRUE)
+T <- read.csv(file = "./data/Sight vs Sound回答フォーム_1 （回答）_202207010835.csv",
+                header = TRUE, fileEncoding="UTF-8-BOM")
 COLNUM_DATAID <- 53
-NUM_DATA <- 50
+ROW_INVALID <- c(32, 44, 88, 95)
+T <- T[-ROW_INVALID, ]
 
 S <- read.csv("./data/stimuli.csv", header = TRUE)
 
@@ -93,6 +97,8 @@ for(i in 1:NUM_PARTICIPANT) {
   df_i$domain <- df_stimuli$domain[df_i$data_id]
   df_i$varcond <- df_stimuli$varcond[df_i$data_id]
   df_i$competition <- df_stimuli$competition[df_i$data_id]
+  
+  df_i <- df_i[!(df_i$data_id %in% DATAID_INVALID), ]
   
   df_data <- rbind(df_data, df_i)
 }
