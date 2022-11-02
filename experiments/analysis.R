@@ -1,5 +1,3 @@
-rm(list = ls())
-
 ###### import libraries ######
 library(nparcomp)
 library(nparLD)
@@ -8,8 +6,8 @@ library(MASS)
 library(ggplot2)
 
 ###### configuration ######
-INPUT_FILENAME <- "datatable_20220701.csv"
-OUTPUT_FILEID <- "analysis_20220701"
+INPUT_FILENAME <- "datatable.csv"
+OUTPUT_FILEID <- "analysis"
 DOMAIN <- c("Audio-only", "Visual-only")
 INSTRUMENT <- c("Piano", "Tsugaru shamisen")
 VARIANCE <- c("low-variance", "high-variance")
@@ -28,6 +26,7 @@ G_HEI <- 4.8
 
 ###### read data ######
 df_data <- read.csv(paste("./data/", INPUT_FILENAME, sep = ""), header = TRUE)
+df_data <- df_data[df_data$domain %in% c("Audio-only", "Visual-only"), ]
 
 ###### data formatting by aggregation ######
 PARTICIPANT_ID <- unique(df_data$participant_id)
@@ -58,7 +57,7 @@ es_raw_list <- vector(mode = "numeric", length = 6)
 es_conv_list <- vector(mode = "numeric", length = length(es_raw_list))
 petasq_lu_list <- matrix(0, nrow = 2, ncol = 2)
 
-# Contrast matrix + ƒ¿ to estimate the second degree of freedom of the ANOVA-type statistics
+# Contrast matrix + ?? to estimate the second degree of freedom of the ANOVA-type statistics
 P_a <- diag(c(rep(1, length(DOMAIN)))) - 1/length(DOMAIN)*matrix(1, nrow = length(DOMAIN), ncol = length(DOMAIN))
 P_b <- diag(c(rep(1, length(VARIANCE)))) - 1/length(VARIANCE)*matrix(1, nrow = length(VARIANCE), ncol = length(VARIANCE))
 C <- P_a %x% P_b
@@ -67,18 +66,18 @@ T <- t(C)%*%gC%*%C
 D <- diag(diag(T))
 Lmd <- diag(rep(1/(length(PARTICIPANT_ID) - 1), length(DOMAIN)*length(VARIANCE)))
 
-printtext <- c("\n###### hypothesis testing 1 (Piano ~ low-variance) ######\n",
-               "\n###### hypothesis testing 2 (Piano ~ high-variance) ######\n",
+printtext <- c("\n###### hypothesis testing 1 (Piano x low-variance) ######\n",
+               "\n###### hypothesis testing 2 (Piano x high-variance) ######\n",
                "\n###### hypothesis testing 3 (Piano) ######\n",
-               "\n###### hypothesis testing 4 (Tsugaru shamisen ~ low-variance) ######\n",
-               "\n###### hypothesis testing 5 (Tsugaru shamisen ~ high-variance) ######\n",
+               "\n###### hypothesis testing 4 (Tsugaru shamisen x low-variance) ######\n",
+               "\n###### hypothesis testing 5 (Tsugaru shamisen x high-variance) ######\n",
                "\n###### hypothesis testing 6 (Tsugaru shamisen) ######\n"
                )
-plottitle <- c("Piano ~ low-variance",
-               "Piano ~ high-variance",
+plottitle <- c("Piano x low-variance",
+               "Piano x high-variance",
                "Piano",
-               "Tsugaru shamisen ~ low-variance",
-               "Tsugaru shamisen ~ high-variance",
+               "Tsugaru shamisen x low-variance",
+               "Tsugaru shamisen x high-variance",
                "Tsugaru shamisen"
                )
 alternative <- c("greater", "less", NaN, "greater", "less", NaN)
