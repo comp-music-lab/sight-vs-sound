@@ -8,9 +8,6 @@ library(ggplot2)
 ###### configuration ######
 INPUT_FILENAME <- "datatable.csv"
 OUTPUT_FILEID <- "analysis"
-DOMAIN <- c("Audio-only", "Visual-only")
-INSTRUMENT <- c("Piano", "Tsugaru shamisen")
-VARIANCE <- c("low-variance", "high-variance")
 
 al_CI <- 0.05
 
@@ -27,28 +24,28 @@ G_HEI <- 4.8
 ###### read data ######
 df_data <- read.csv(paste("./data/", INPUT_FILENAME, sep = ""), header = TRUE)
 df_data <- df_data[df_data$domain %in% c("Audio-only", "Visual-only"), ]
+df_data <- df_data[!(df_data$data_id %in% DATAID_INVALID), ]
 
 ###### data formatting by aggregation ######
-PARTICIPANT_ID <- unique(df_data$participant_id)
-df_stats <- data.frame(participant_id = as.numeric(), score = as.numeric(),
-                       instrument = as.character(), domain = as.character(), varcond = as.character())
+df_stats <- aggregate(df_data$score, by = list(df_data$participant_id, df_data$instrument, df_data$domain, df_data$varcond), FUN = mean)
+names(df_stats) <- c("participant_id", "instrument", "domain", "varcond", "score")
 
-for (i in PARTICIPANT_ID) {
-  for (j in INSTRUMENT) {
-    for (k in DOMAIN) {
-      for (l in VARIANCE) {
-        idx <- df_data$participant_id == i & df_data$instrument == j & df_data$domain == k & df_data$varcond == l
-        score_i <- sum(df_data$score[idx])/sum(idx)
-        df_stats <- rbind(df_stats,
-                          data.frame(participant_id = i, score = score_i, instrument = j, domain = k, varcond = l)
-                          )
-      }
-    }
-  }
-}
+###### Setup for getting the second degree of freedom of ANOVA-type statistics to obtain partial η^2 for the equivalence testing of interaction effects ######
+## Follow p.301 of Brunner et al. (2018). Though this is not exact since repeated measures assume the second degree of freedom as infinity.
+tr = function(x) {sum(diag(x))}
+a = length(unique(df_stats$domain))
+b = length(unique(df_stats$varcond))
+n = length(unique(df_stats$participant_id))
+
+P_a = diag(a) - (1/a)*matrix(1, a, a)
+P_b = diag(b) - (1/b)*matrix(1, b, b)
+C = P_a %x% P_b
+T = t(C)%*%ginv(C%*%t(C))%*%C
+D = diag(diag(T))
+Lmd = diag(rep(1/(n - 1), a*b))
 
 ###### Hypothesis testing (paired two-sample tests) ######
-my_log <- file(paste("./output/", OUTPUT_FILEID, ".txt", sep = ""))
+my_log <- file(paste("./output/", OUTPUT_FILEID, "_", FILEID, ".txt", sep = ""))
 sink(my_log, append = FALSE, type = "output")
 sink(my_log, append = TRUE, type = "message")
 
@@ -56,15 +53,6 @@ pval_list <- vector(mode = "numeric", length = 6)
 es_raw_list <- vector(mode = "numeric", length = 6)
 es_conv_list <- vector(mode = "numeric", length = length(es_raw_list))
 petasq_lu_list <- matrix(0, nrow = 2, ncol = 2)
-
-# Contrast matrix + ?? to estimate the second degree of freedom of the ANOVA-type statistics
-P_a <- diag(c(rep(1, length(DOMAIN)))) - 1/length(DOMAIN)*matrix(1, nrow = length(DOMAIN), ncol = length(DOMAIN))
-P_b <- diag(c(rep(1, length(VARIANCE)))) - 1/length(VARIANCE)*matrix(1, nrow = length(VARIANCE), ncol = length(VARIANCE))
-C <- P_a %x% P_b
-gC <- ginv(C%*%t(C))
-T <- t(C)%*%gC%*%C
-D <- diag(diag(T))
-Lmd <- diag(rep(1/(length(PARTICIPANT_ID) - 1), length(DOMAIN)*length(VARIANCE)))
 
 printtext <- c("\n###### hypothesis testing 1 (Piano x low-variance) ######\n",
                "\n###### hypothesis testing 2 (Piano x high-variance) ######\n",
@@ -104,19 +92,48 @@ for(i in 1:6) {
   if(i == 1 || i == 2 || i == 4 || i == 5) {
     df_i <- data.frame(participant_id = df_stats$participant_id[idx], score = df_stats$score[idx], domain = df_stats$domain[idx])
     
+    # Hypothesis testing
     result_effectsize <- npar.t.test.paired(score ~ domain, df_i, conf.level = 1 - al_CI, alternative = alternative[i], nperm = 10000)
-    ggsave(file = paste("./output/", OUTPUT_FILEID, "_H", i, ".png", sep = ""), width = G_WID, height = G_HEI)
-    
     pval_list[i] <- result_effectsize$Analysis[2, 5]
     es_raw_list[i] <- result_effectsize$Analysis[2, 2]
     es_conv_list[i] <- sqrt(2)*qnorm(es_raw_list[i])
+    
+    # Equivalence testing
+    result_equiv <- npar.t.test.paired(score ~ domain, df_i, conf.level = 0.90, alternative = "two.sided", nperm = 10000)
+    cat("\n***Check confidence intervals for equivalence testing***\n")
+    print(result_equiv$Analysis)
+    
   } else if(i == 3 || i == 6) {
     df_i <- data.frame(participant_id = df_stats$participant_id[idx], score = df_stats$score[idx], Domain = df_stats$domain[idx], Variance = df_stats$varcond[idx])
     
+    # Hypothesis testing
     result_effectsize <- nparLD(score ~ Domain*Variance, data = df_i, subject = "participant_id",
                                 plot.CI = TRUE, alpha = al_CI, show.covariance = TRUE)
-    summary(result_effectsize)
     
+    summary(result_effectsize)
+    pval_list[i] <- result_effectsize$ANOVA.test[3, 3]
+    es_raw_list[i] <- result_effectsize$ANOVA.test[3, 1]
+    
+    # Calculate partial η^2 for equivalence testing
+    V = result_effectsize$covariance
+    
+    df_effect = tr(T%*%V)^2/tr(T%*%V%*%T%*%V)
+    df_error = tr(D*V)^2/tr(D^2 %*% V^2 %*% Lmd)
+    F = result_effectsize$ANOVA.test[3, 1]
+    
+    petasq = F*df_effect/(F*df_effect + df_error) # convert F-value to partial eta squared
+    petasqadj = petasq - (1 - petasq)*df_effect/df_error # convert to adjusted partial eta squared
+    
+    es_conv_list[i] <- petasqadj
+    
+    # estimate 90% CI endpoints of the non-centrality parameters of non-central F distribution and convert them to CI of partial eta-squared
+    k <- i/3
+    ncf_lu <- conf.limits.ncf(F.value = F, conf.level = 0.9, df.1 = df_effect, df.2 = df_error)
+    petasq_lu_list[k, ] <- c(ncf_lu$Lower.Limit/(ncf_lu$Lower.Limit + df_effect + df_error + 1), 
+                             ncf_lu$Upper.Limit/(ncf_lu$Upper.Limit + df_effect + df_error + 1))
+    petasq_lu_list[k, ] <- petasq_lu_list[k, ] - (1 - petasq_lu_list[k, ]) * df_effect/df_error
+    
+    # Plot result
     g_i <- ggplot(data = result_effectsize$Conf.Int, aes(x = Time1, group = Time2, colour = Time2))
     g_i <- g_i + geom_errorbar(aes(ymin = Lower, ymax = Upper), width = 0.2, position = position_dodge(width = 0.2))
     g_i <- g_i + geom_point(aes(y = RTE, fill = Time2), position = position_dodge(width = 0.2), shape = 22)
@@ -126,21 +143,7 @@ for(i in 1:6) {
                       title = paste("Interaction effects and ", 100*(1 - al_CI), "% CI (", df_stats$instrument[idx][1], ")", sep = "")) + 
       theme(legend.position = "bottom", legend.title = element_blank(), plot.title = element_text(hjust = 0.5)) +
       ylim(0, 1)
-    ggsave(plot = g_i, file = paste("./output/", OUTPUT_FILEID, "_H", i, ".png", sep = ""), width = G_WID, height = G_HEI)
-    
-    pval_list[i] <- result_effectsize$ANOVA.test[3, 3]
-    es_raw_list[i] <- result_effectsize$ANOVA.test[3, 1]
-    
-    df_effect <- result_effectsize$ANOVA.test[3, 2]
-    df_error <- sum(diag(D%*%result_effectsize$covariance))^2 / sum(diag(D^2%*%result_effectsize$covariance^2%*%Lmd))
-    es_conv_list[i] <- es_raw_list[i] * df_effect/(es_raw_list[i] * df_effect + df_error)
-    es_conv_list[i] <- es_conv_list[i] - (1 - es_conv_list[i]) * df_effect/df_error
-    
-    k <- i/3
-    ncf_lu <- conf.limits.ncf(F.value = es_raw_list[i], conf.level = 0.9, df.1 = df_effect, df.2 = df_error)
-    petasq_lu_list[k, ] <- c(ncf_lu$Lower.Limit/(ncf_lu$Lower.Limit + df_effect + df_error + 1), 
-                             ncf_lu$Upper.Limit/(ncf_lu$Upper.Limit + df_effect + df_error + 1))
-    petasq_lu_list[k, ] <- petasq_lu_list[k, ] - (1 - petasq_lu_list[k, ]) * df_effect/df_error
+    ggsave(plot = g_i, file = paste("./output/", OUTPUT_FILEID, "_H", i, "_", FILEID, ".png", sep = ""), width = G_WID, height = G_HEI)
   }
 }
 

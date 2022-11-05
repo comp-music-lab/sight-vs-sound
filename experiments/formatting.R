@@ -4,7 +4,6 @@ library(stringr)
 ###### configuration ######
 OUTPUT_FILENAME <- "datatable.csv"
 NUM_STIMULI <- 75
-DATAID_INVALID <- c(21:25, 46:50)
 NUM_DATA <- c(50, 25)
 COLNUM_DATAID <- c(53, 28)
 
@@ -135,8 +134,6 @@ for (m in 1:length(T)) {
     df_i$competition <- df_stimuli$competition[df_i$data_id]
     df_i$performer_1 <- df_performer$performer_1[df_i$data_id]
     df_i$performer_2 <- df_performer$performer_2[df_i$data_id]
-    
-    df_i <- df_i[!(df_i$data_id %in% DATAID_INVALID), ]
     
     df_data <- rbind(df_data, df_i)
   }

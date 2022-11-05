@@ -38,6 +38,7 @@ G_XLABELS = list(c("Audio-only.low-variance" = "low-var x AO",
 
 ###### Read data ######
 df_data <- read.csv(paste("./data/", INPUT_FILENAME, sep = ""), header = TRUE)
+df_data <- df_data[!(df_data$data_id %in% DATAID_INVALID), ]
 
 ###### [Figure 1] Data formatting by aggregation ######
 df_stats <- aggregate(df_data$score, by = list(df_data$participant_id, df_data$instrument, df_data$domain, df_data$varcond), FUN = mean)
@@ -58,48 +59,45 @@ names(df_competition) <- c("Competition", "Domain", "Variance", "score")
 df_competition$Domain <- factor(df_competition$Domain, levels = c("Audio-only", "Visual-only", "Audio-Visual"))
 
 ###### [Figure 4] Data formatting by summarizing by performer pairs ######
-tmp <- df_data[!(df_data$data_id %in% c(71:75)), ]
+tmp <- df_data
 tmp$performer_pair <- paste(tmp$performer_1, ' - ', tmp$performer_2, sep = "")
-df_pair <- aggregate(tmp$score, by = list(tmp$performer_pair, tmp$domain, tmp$varcond), FUN = mean)
+df_pair <- aggregate(tmp$score, by = list(tmp$data_id, tmp$domain, tmp$varcond, tmp$instrument, tmp$performer_pair), FUN = mean)
 
-names(df_pair) <- c("Pair", "Domain", "Variance", "score")
+names(df_pair) <- c("DataID", "Domain", "Variance", "Instrument", "Pair", "score")
+df_pair$clipID <- (((df_pair$DataID - 1)%%25) + 1)
 
-df_PERFORMER_PAIR <- unique(cbind(tmp[, 6], tmp[, 10:11]))
-df_PERFORMER_PAIR$abbrv <- "(p)"
-df_PERFORMER_PAIR$abbrv[df_PERFORMER_PAIR[, 1] == "Tsugaru shamisen"] <- "(t-s)"
-df_PERFORMER_PAIR$Pair <- paste(
-  df_PERFORMER_PAIR[, 2], ' - ', df_PERFORMER_PAIR[, 3], sep = ""
-)
-df_PERFORMER_PAIR$audioscore <- 0
-for (i in 1:dim(df_PERFORMER_PAIR)[1]) {
-  df_PERFORMER_PAIR$audioscore[i] <- df_pair$score[df_pair$Domain == "Audio-only" & df_pair$Pair == df_PERFORMER_PAIR$Pair[i]] - df_pair$score[df_pair$Domain == "Visual-only" & df_pair$Pair == df_PERFORMER_PAIR$Pair[i]]
-}
+df_pair <- df_pair[order(df_pair$clipID), ]
+df_pair <- df_pair[df_pair$clipID %in% intersect(df_pair$clipID[df_pair$Domain == "Audio-only"], df_pair$clipID[df_pair$Domain == "Visual-only"]), ]
 
-df_PERFORMER_PAIR <- df_PERFORMER_PAIR[order(df_PERFORMER_PAIR$audioscore, decreasing = TRUE), ]
-df_PERFORMER_PAIR <- df_PERFORMER_PAIR[order(df_PERFORMER_PAIR$abbrv), ]
+df_CLIPORDER <- data.frame(clipID = unique(df_pair[c("clipID")])$clipID,
+                           Pair = unique(df_pair[c("Pair", "clipID")])$Pair,
+                           AVscorediff = df_pair$score[df_pair$Domain == "Audio-only"] - df_pair$score[df_pair$Domain == "Visual-only"],
+                           Instrument = unique(df_pair[c("Instrument", "clipID")])$Instrument
+                           )
+df_CLIPORDER$plotname <- sapply(
+        strsplit(df_CLIPORDER$Pair, " - "), function(x) return(
+        paste(sapply(strsplit(x, " "), function(y) return(paste(substring(y[1], 1, 1), ".", substring(y[2], 1, 1), ".", sep = ""))), collapse = "\nvs\n")
+      )
+    )
+df_CLIPORDER$plotname[df_CLIPORDER$Instrument == "Piano"] <- paste(df_CLIPORDER$plotname[df_CLIPORDER$Instrument == "Piano"], "\n(p)", sep="")
+df_CLIPORDER$plotname[df_CLIPORDER$Instrument == "Tsugaru shamisen"] <- paste(df_CLIPORDER$plotname[df_CLIPORDER$Instrument == "Tsugaru shamisen"], "\n(t-s)", sep="")
 
-PERFORMER_PAIR <- paste(
-  df_PERFORMER_PAIR[, 2], ' - ', df_PERFORMER_PAIR[, 3], sep = ""
-)
-PERFORMER_PAIR_INI <- paste(
-  sapply(strsplit(df_PERFORMER_PAIR[, 2], " "), function(x){return(paste(substring(x[1], 1, 1), ".", substring(x[2], 1, 1), ".", sep = ""))}),
-  "\nvs\n",
-  sapply(strsplit(df_PERFORMER_PAIR[, 3], " "), function(x){return(paste(substring(x[1], 1, 1), ".", substring(x[2], 1, 1), ".", sep = ""))}),
-  "\n",
-  df_PERFORMER_PAIR$abbrv,
-  sep = ""
-)
+df_CLIPORDER <- df_CLIPORDER[order(df_CLIPORDER$AVscorediff, decreasing = TRUE), ]
+df_CLIPORDER <- df_CLIPORDER[order(df_CLIPORDER$Instrument), ]
+CLIPID_ORDER <- as.character(df_CLIPORDER$clipID)
+CLIPID_PLOTNAME <- df_CLIPORDER$plotname
 
 df_pair$linecolor <- "Visual-only"
-for (i in 1:length(PERFORMER_PAIR)) {
-  AVdiff <- df_pair$score[df_pair$Domain == "Audio-only" & df_pair$Pair == PERFORMER_PAIR[i]] - df_pair$score[df_pair$Domain == "Visual-only" & df_pair$Pair == PERFORMER_PAIR[i]]
+for (i in 1:length(CLIPID_ORDER)) {
+  AVdiff <- df_pair$score[df_pair$Domain == "Audio-only" & df_pair$clipID == CLIPID_ORDER[i]] - df_pair$score[df_pair$Domain == "Visual-only" & df_pair$clipID == CLIPID_ORDER[i]]
   
   if (AVdiff > 0) {
-    df_pair$linecolor[df_pair$Pair == PERFORMER_PAIR[i]] <- "Audio-only"
+    df_pair$linecolor[df_pair$clipID == CLIPID_ORDER[i]] <- "Audio-only"
   }
 }
 
 df_pair$Domain <- factor(df_pair$Domain, levels = c("Audio-only", "Visual-only", "Audio-Visual"))
+df_pair$clipID <- as.character(df_pair$clipID)
 
 ###### [Figure 1 & 2] Create ggplot objects ######
 df_list = list(df_stats, df_diff)
@@ -150,7 +148,7 @@ for (j in 1:2) {
   g <- grid.arrange(grobs = g_list, nrow = 2)
   
   ###### Save the figure ######
-  ggsave(file = paste("./output/", OUTPUT_FILEID[j], "_ggplots.png", sep = ""),
+  ggsave(file = paste("./output/", OUTPUT_FILEID[j], "_ggplots_", FILEID, ".png", sep = ""),
          plot = g, width = G_WID, height = G_HEI)
 }
 
@@ -162,7 +160,7 @@ for (j in 1:2) {
     G_TITLESTR <- "Competition-wise summary"
   }else if (j == 2) {
     g <- ggplot(data = df_pair,
-                          aes(x = Pair, y = score, colour = Domain, shape = Variance))
+                          aes(x = clipID, y = score, colour = Domain, shape = Variance))
     G_TITLESTR <- "Performer pair-wise summary"
   }
   
@@ -177,7 +175,7 @@ for (j in 1:2) {
     )
   
   if (j == 2) {
-    g <- g + geom_line(data = df_pair[df_pair$Domain %in% c("Audio-only", "Visual-only"), ], aes(x = Pair, y = score, group = Pair, color = linecolor), linetype = "longdash")
+    g <- g + geom_line(data = df_pair[df_pair$Domain %in% c("Audio-only", "Visual-only"), ], aes(x = clipID, y = score, group = clipID, color = linecolor), linetype = "longdash")
   }
   
   if (j == 1) {
@@ -194,9 +192,9 @@ for (j in 1:2) {
       )
   }else if (j == 2) {
     g <- g + 
-      scale_x_discrete(limits = PERFORMER_PAIR, labels = PERFORMER_PAIR_INI)
+      scale_x_discrete(limits = CLIPID_ORDER, labels = CLIPID_PLOTNAME)
   }
   
-  ggsave(file = paste("./output/", OUTPUT_FILEID[2 + j], "_ggplots.png", sep = ""),
+  ggsave(file = paste("./output/", OUTPUT_FILEID[2 + j], "_ggplots_", FILEID, ".png", sep = ""),
          plot = g, width = G_WID, height = G_HEI)
 }
