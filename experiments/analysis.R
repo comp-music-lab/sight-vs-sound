@@ -30,8 +30,21 @@ df_data <- df_data[!(df_data$data_id %in% DATAID_INVALID), ]
 df_stats <- aggregate(df_data$score, by = list(df_data$participant_id, df_data$instrument, df_data$domain, df_data$varcond), FUN = mean)
 names(df_stats) <- c("participant_id", "instrument", "domain", "varcond", "score")
 
-###### Setup for getting the second degree of freedom of ANOVA-type statistics to obtain partial η^2 for the equivalence testing of interaction effects ######
-## Follow p.301 of Brunner et al. (2018). Though this is not exact since repeated measures assume the second degree of freedom as infinity.
+###### Setup for getting the second degree of freedom of the ANOVA-type statistics to obtain partial η^2 for the equivalence testing of interaction effects ######
+# <Notes>
+# The ANOVA-type statistics provides more accurate alpha-level control than the Wald-type statistics for small or moderate sample sizes (Friedrich et al., 2017).
+# But the ANOVA-type statistics does not have asymptotically consistent alpha-level control. The wild bootstrap procedure can remedy this issue (Friedrich et al., 2017).
+# The Wald-type statistics has asymptotically consistent control. But it requires large sample sizes otherwise its behavior become liberal (Friedrich et al., 2017; Konietschke et al., 2010).
+# The sampling distribution of ANOVA-type statistics for repeated measures design can be approximated by a central F(f, ∞) (Friedrich et al., 2017).
+# **IMPORTANT** This sampling distribution can be further approximated by F(f, f0) (finite second degree of freedom) for the case of the main effects of the whole-plot factors or interactions involving only whole-plot factors (Friedrich et al., 2017; Noguchi et al., 2012). See Noguchi et al. (2012) for examples.
+# The following lines follow p.301 of Brunner et al. (2018).
+#
+# <References>
+# Brunner E., Bathke A. C., & Konietschke F. (2018). Rank and pseudo-rank procedures for independent observations in factorial designs: Using R and SAS. Springer. https://ci.nii.ac.jp/ncid/BB28708839
+# Friedrich, S., Konietschke, F., & Pauly, M. (2017). A wild bootstrap approach for nonparametric repeated measurements. Computational Statistics & Data Analysis, 113, 38–52. https://doi.org/10.1016/j.csda.2016.06.016
+# Konietschke, F., Bathke, A. C., Hothorn, L. A., & Brunner, E. (2010). Testing and estimation of purely nonparametric effects in repeated measures designs. Computational Statistics & Data Analysis, 54(8), 1895–1905. https://doi.org/10.1016/j.csda.2010.02.019
+# Noguchi, K., Gel, Y. R., Brunner, E., & Konietschke, F. (2012). nparLD: An R Software Package for the Nonparametric Analysis of Longitudinal Data in Factorial Experiments. Journal of Statistical Software, 50, 1–23. https://doi.org/10.18637/jss.v050.i12
+
 tr = function(x) {sum(diag(x))}
 a = length(unique(df_stats$domain))
 b = length(unique(df_stats$varcond))
