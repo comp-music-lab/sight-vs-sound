@@ -7,7 +7,7 @@ library(RColorBrewer)
 INPUT_FILENAME <- "datatable.csv"
 OUTPUT_FILEID <- c("analysis_raw", "analysis_diff", "analysis_compe", "analysis_pair")
 
-G_VIOLIN_ADJUST <- 0.6
+G_VIOLIN_ADJUST <- 1.5
 G_VIOLIN_SCALE <- "area"
 G_TITLE_SIZE <- 10
 G_X_SIZE <- 8
@@ -16,7 +16,7 @@ G_X_ROTATE <- -0
 G_WID <- 8
 G_HEI <- 4.8
 
-G_COLPALETE <- c("Set1", "Dark2")
+G_COLPALETE <- c("Set2", "Dark2")
 G_YL = list(c(0, 1), c(-0.5, 0.5))
 G_YLABELSTR = c("Percent correct", "Sight-vs-sound effect")
 G_YBASE = c(0.5, 0)
@@ -37,7 +37,7 @@ G_XLABELS = list(c("Audio-only.low-variance" = "low-var x AO",
                    "high-variance" = "high-var\n(Visual - Audio)"))
 
 ###### Read data ######
-df_data <- read.csv(paste("./data/", INPUT_FILENAME, sep = ""), header = TRUE)
+df_data <- read.csv(paste(OUTPUTDIR, INPUT_FILENAME, sep = ""), header = TRUE)
 df_data <- df_data[!(df_data$data_id %in% DATAID_INVALID), ]
 
 ###### [Figure 1] Data formatting by aggregation ######
@@ -57,6 +57,22 @@ df_competition <- aggregate(df_data$score, by = list(df_data$competition, df_dat
 
 names(df_competition) <- c("Competition", "Domain", "Variance", "score")
 df_competition$Domain <- factor(df_competition$Domain, levels = c("Audio-only", "Visual-only", "Audio-Visual"))
+
+df_competition$linecolor <- "Visual-only"
+COMPETITION_LIST <- unique(df_competition$Competition)
+for (i in 1:length(COMPETITION_LIST)) {
+  AVdiff <- df_competition$score[df_competition$Domain == "Audio-only" & df_competition$Variance == "low-variance" & df_competition$Competition == COMPETITION_LIST[i]] - df_competition$score[df_competition$Domain == "Visual-only" & df_competition$Variance == "low-variance" & df_competition$Competition == COMPETITION_LIST[i]]
+  
+  if (length(AVdiff) == 1 && AVdiff > 0) {
+    df_competition$linecolor[df_competition$Competition == COMPETITION_LIST[i] & df_competition$Variance == "low-variance"] <- "Audio-only"
+  }
+  
+  AVdiff <- df_competition$score[df_competition$Domain == "Audio-only" & df_competition$Variance == "high-variance" & df_competition$Competition == COMPETITION_LIST[i]] - df_competition$score[df_competition$Domain == "Visual-only" & df_competition$Variance == "high-variance" & df_competition$Competition == COMPETITION_LIST[i]]
+  
+  if (length(AVdiff) == 1 && AVdiff > 0) {
+    df_competition$linecolor[df_competition$Competition == COMPETITION_LIST[i] & df_competition$Variance == "high-variance"] <- "Audio-only"
+  }
+}
 
 ###### [Figure 4] Data formatting by summarizing by performer pairs ######
 tmp <- df_data
@@ -81,6 +97,7 @@ df_CLIPORDER$plotname <- sapply(
     )
 df_CLIPORDER$plotname[df_CLIPORDER$Instrument == "Piano"] <- paste(df_CLIPORDER$plotname[df_CLIPORDER$Instrument == "Piano"], "\n(p)", sep="")
 df_CLIPORDER$plotname[df_CLIPORDER$Instrument == "Tsugaru shamisen"] <- paste(df_CLIPORDER$plotname[df_CLIPORDER$Instrument == "Tsugaru shamisen"], "\n(t-s)", sep="")
+df_CLIPORDER$plotname[df_CLIPORDER$clipID %in% c(21:25)] <- paste(df_CLIPORDER$plotname[df_CLIPORDER$clipID %in% c(21:25)], "*", sep="")
 
 df_CLIPORDER <- df_CLIPORDER[order(df_CLIPORDER$AVscorediff, decreasing = TRUE), ]
 df_CLIPORDER <- df_CLIPORDER[order(df_CLIPORDER$Instrument), ]
@@ -133,7 +150,7 @@ for (j in 1:2) {
       scale_color_brewer(palette = G_COLPALETE[j]) + 
       geom_hline(yintercept = G_YBASE[j], linetype = "dotted", color = "grey27") +
       ylim(G_YL[[j]]) + 
-      stat_summary(fun = "mean", geom = "point", shape = 23, size = 2., fill = "black") +
+      stat_summary(fun = "mean", geom = "point", shape = 23, size = 2., fill = "#DF536B") +
       labs(x = "", y = G_YLABELSTR[j], title = INSTRUMENT[i]) +
       theme(legend.position = "none",
             plot.title = element_text(hjust = 0.5),
@@ -148,24 +165,40 @@ for (j in 1:2) {
   g <- grid.arrange(grobs = g_list, nrow = 2)
   
   ###### Save the figure ######
-  ggsave(file = paste("./output/", OUTPUT_FILEID[j], "_ggplots_", FILEID, ".png", sep = ""),
+  ggsave(file = paste(OUTPUTDIR, OUTPUT_FILEID[j], "_ggplots_", FILEID, ".png", sep = ""),
          plot = g, width = G_WID, height = G_HEI)
 }
 
 ###### [Figure 3 & 4] Create ggplot objects ######
 for (j in 1:2) {
   if (j == 1) {
-    g <- ggplot(data = df_competition,
-                          aes(x = Competition, y = score, colour = Domain, shape = Variance))
+    g <- ggplot() + 
+      geom_point(data = df_competition[df_competition$Variance == "high-variance", ],
+                 aes(x = Competition, y = score, colour = Domain, shape = Variance),
+                 position = position_nudge(- 0.15)) + 
+      geom_point(data = df_competition[df_competition$Variance == "low-variance", ],
+                 aes(x = Competition, y = score, colour = Domain, shape = Variance),
+                 position = position_nudge(+ 0.15)) + 
+      geom_line(data = df_competition[df_competition$Variance == "high-variance" & !(df_competition$Domain %in% "Audio-Visual"), ],
+                aes(x = Competition, y = score, group = Competition, color = linecolor), linetype = "longdash",
+                position = position_nudge(- 0.15)) + 
+      geom_line(data = df_competition[df_competition$Variance == "low-variance" & !(df_competition$Domain %in% "Audio-Visual"), ],
+                aes(x = Competition, y = score, group = Competition, color = linecolor), linetype = "longdash",
+                position = position_nudge(+ 0.15)) 
+    
     G_TITLESTR <- "Competition-wise summary"
   }else if (j == 2) {
     g <- ggplot(data = df_pair,
-                          aes(x = clipID, y = score, colour = Domain, shape = Variance))
+                          aes(x = clipID, y = score, colour = Domain, shape = Variance)) + 
+      geom_point() + 
+      geom_line(data = df_pair[df_pair$Domain %in% c("Audio-only", "Visual-only"), ],
+                  aes(x = clipID, y = score, group = clipID, color = linecolor), linetype = "longdash")
+    
     G_TITLESTR <- "Performer pair-wise summary"
   }
   
   g <- g +
-    geom_point() +
+    scale_color_brewer(palette = "Set2") +
     ylim(0, 1) +
     labs(x = "", y = "Percent correct", title = G_TITLESTR) +
     theme(plot.title = element_text(hjust = 0.5),
@@ -173,10 +206,6 @@ for (j in 1:2) {
           axis.text.y = element_text(size = G_Y_SIZE),
           axis.title.y = element_text(size = G_Y_SIZE)
     )
-  
-  if (j == 2) {
-    g <- g + geom_line(data = df_pair[df_pair$Domain %in% c("Audio-only", "Visual-only"), ], aes(x = clipID, y = score, group = clipID, color = linecolor), linetype = "longdash")
-  }
   
   if (j == 1) {
     g <- g + 
@@ -195,6 +224,6 @@ for (j in 1:2) {
       scale_x_discrete(limits = CLIPID_ORDER, labels = CLIPID_PLOTNAME)
   }
   
-  ggsave(file = paste("./output/", OUTPUT_FILEID[2 + j], "_ggplots_", FILEID, ".png", sep = ""),
+  ggsave(file = paste(OUTPUTDIR, OUTPUT_FILEID[2 + j], "_ggplots_", FILEID, ".png", sep = ""),
          plot = g, width = G_WID, height = G_HEI)
 }

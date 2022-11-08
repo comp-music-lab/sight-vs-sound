@@ -3,7 +3,7 @@
 
  #----------------Nonparametric Paired t Test-------------------------------------------# 
  
- - Sample Size:  155 
+ - Sample Size:  161 
  - Factor Levels:  Audio-only Visual-only 
  - H0:  p<=1/2 
  - Alternative Hypothesis:  True relative effect is greater than 1/2 
@@ -15,125 +15,7 @@
 
  #----------------Nonparametric Paired t Test-------------------------------------------# 
  
- - Sample Size:  155 
- - Factor Levels:  Audio-only Visual-only 
- - H0:  p=1/2 
- - Alternative Hypothesis:  True relative effect is less or greater than 1/2 
- - Confidence Level: 90 % 
- - Method: Brunner-Munzel (BM), Permutation (PERM) 
- 
- #--------------------------------------------------------------------------------------# 
- 
-
-***Check confidence intervals for equivalence testing***
-     Lower p.hat Upper      T p.value
-BM   0.728 0.768 0.808 11.162       0
-PERM 0.729 0.768 0.808 11.162       0
-
-###### hypothesis testing 2 (Piano x high-variance) ######
-
- #----------------Nonparametric Paired t Test-------------------------------------------# 
- 
- - Sample Size:  155 
- - Factor Levels:  Audio-only Visual-only 
- - H0:  p>=1/2 
- - Alternative Hypothesis:  True relative effect is less than 1/2 
- - Confidence Level: 95 % 
- - Method: Brunner-Munzel (BM), Permutation (PERM) 
- 
- #--------------------------------------------------------------------------------------# 
- 
-
- #----------------Nonparametric Paired t Test-------------------------------------------# 
- 
- - Sample Size:  155 
- - Factor Levels:  Audio-only Visual-only 
- - H0:  p=1/2 
- - Alternative Hypothesis:  True relative effect is less or greater than 1/2 
- - Confidence Level: 90 % 
- - Method: Brunner-Munzel (BM), Permutation (PERM) 
- 
- #--------------------------------------------------------------------------------------# 
- 
-
-***Check confidence intervals for equivalence testing***
-     Lower p.hat Upper      T p.value
-BM   0.425 0.476 0.528 -0.761   0.448
-PERM 0.425 0.476 0.528 -0.761   0.444
-
-###### hypothesis testing 3 (Piano) ######
- Total number of observations :  620
- Total Number of subjects :  155
- Total Number of missing observations :  0 
-
- Class level information 
- ----------------------- 
- Levels of Domain (sub-plot factor time1) :  2
- Levels of Variance (sub-plot factor time2) :  2 
-
- Abbreviations 
- ----------------------- 
- RankMeans = Rank means
- Nobs = Number of observations
- RTE = Relative treatment effect
- Wald.test = Wald-type test statistic
- ANOVA.test = ANOVA-type test statistic
- covariance = Covariance matrix 
- Note: The description output above will disappear by setting description=FALSE in the input. See the help file for details. 
-
- LD F2 Model 
- ----------------------- 
- Check that the order of the time1 and time2 levels are correct.
- Time1 level:   Audio-only Visual-only 
- Time2 level:   high-variance low-variance 
- If the order is not correct, specify the correct order in time1.order or time2.order.
-
-Model: 
-LD F2 Model 
- 
-Call: 
-score ~ Domain * Variance
-
-Relative Treatment Effect (RTE):
-                                        RankMeans Nobs       RTE
-DomainAudio-only:Variancehigh-variance   342.6742  155 0.5518939
-DomainAudio-only:Variancelow-variance    206.7839  155 0.3327159
-DomainVisual-only:Variancehigh-variance  328.1065  155 0.5283975
-DomainVisual-only:Variancelow-variance   364.4355  155 0.5869927
-DomainAudio-only                         274.7290  310 0.4423049
-DomainVisual-only                        346.2710  310 0.5576951
-Variancehigh-variance                    335.3903  310 0.5401457
-Variancelow-variance                     285.6097  310 0.4598543
-
-Wald-Type Statistc (WTS):
-                Statistic df      p-value
-Domain           30.97872  1 2.608726e-08
-Variance         13.83685  1 1.993872e-04
-Domain:Variance  45.40417  1 1.602930e-11
-
-ANOVA-Type Statistc (ATS):
-                Statistic df      p-value
-Domain           30.97872  1 2.608726e-08
-Variance         13.83685  1 1.993872e-04
-Domain:Variance  45.40417  1 1.602930e-11
-
-###### hypothesis testing 4 (Tsugaru shamisen x low-variance) ######
-
- #----------------Nonparametric Paired t Test-------------------------------------------# 
- 
- - Sample Size:  155 
- - Factor Levels:  Audio-only Visual-only 
- - H0:  p<=1/2 
- - Alternative Hypothesis:  True relative effect is greater than 1/2 
- - Confidence Level: 95 % 
- - Method: Brunner-Munzel (BM), Permutation (PERM) 
- 
- #--------------------------------------------------------------------------------------# 
- 
-
- #----------------Nonparametric Paired t Test-------------------------------------------# 
- 
- - Sample Size:  155 
+ - Sample Size:  161 
  - Factor Levels:  Audio-only Visual-only 
  - H0:  p=1/2 
  - Alternative Hypothesis:  True relative effect is less or greater than 1/2 
@@ -145,14 +27,31 @@ Domain:Variance  45.40417  1 1.602930e-11
 
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper     T p.value
-BM   0.453 0.506 0.559 0.194   0.847
-PERM 0.453 0.506 0.559 0.194   0.841
+BM   0.643  0.69 0.736 6.701       0
+PERM 0.642  0.69 0.737 6.701       0
 
-###### hypothesis testing 5 (Tsugaru shamisen x high-variance) ######
+***Paired t-test (exploratory analysis)***
+
+	Paired t-test
+
+data:  df_i$score[df_i$domain == "Audio-only"] and df_i$score[df_i$domain == "Visual-only"]
+t = -6.3154, df = 160, p-value = 1.274e-09
+alternative hypothesis: true mean difference is less than 0
+95 percent confidence interval:
+       -Inf -0.1173517
+sample estimates:
+mean difference 
+     -0.1590062 
+
+
+***Effect size of the paired t-test (exploratory analysis)***
+[1] 0.4977238
+
+###### hypothesis testing 2 (Piano x high-variance) ######
 
  #----------------Nonparametric Paired t Test-------------------------------------------# 
  
- - Sample Size:  155 
+ - Sample Size:  161 
  - Factor Levels:  Audio-only Visual-only 
  - H0:  p>=1/2 
  - Alternative Hypothesis:  True relative effect is less than 1/2 
@@ -164,7 +63,7 @@ PERM 0.453 0.506 0.559 0.194   0.841
 
  #----------------Nonparametric Paired t Test-------------------------------------------# 
  
- - Sample Size:  155 
+ - Sample Size:  161 
  - Factor Levels:  Audio-only Visual-only 
  - H0:  p=1/2 
  - Alternative Hypothesis:  True relative effect is less or greater than 1/2 
@@ -176,12 +75,29 @@ PERM 0.453 0.506 0.559 0.194   0.841
 
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper      T p.value
-BM   0.347 0.396 0.445 -3.498   0.001
-PERM 0.347 0.396 0.446 -3.498   0.000
+BM   0.419  0.47 0.521 -0.983   0.327
+PERM 0.420  0.47 0.520 -0.983   0.320
 
-###### hypothesis testing 6 (Tsugaru shamisen) ######
- Total number of observations :  620
- Total Number of subjects :  155
+***Paired t-test (exploratory analysis)***
+
+	Paired t-test
+
+data:  df_i$score[df_i$domain == "Audio-only"] and df_i$score[df_i$domain == "Visual-only"]
+t = 0.90632, df = 160, p-value = 0.1831
+alternative hypothesis: true mean difference is greater than 0
+95 percent confidence interval:
+ -0.01845687         Inf
+sample estimates:
+mean difference 
+     0.02236025 
+
+
+***Effect size of the paired t-test (exploratory analysis)***
+[1] 0.07142833
+
+###### hypothesis testing 3 (Piano) ######
+ Total number of observations :  644
+ Total Number of subjects :  161
  Total Number of missing observations :  0 
 
  Class level information 
@@ -214,41 +130,193 @@ score ~ Domain * Variance
 
 Relative Treatment Effect (RTE):
                                         RankMeans Nobs       RTE
-DomainAudio-only:Variancehigh-variance   366.5000  155 0.5903226
-DomainAudio-only:Variancelow-variance    285.2032  155 0.4591988
-DomainVisual-only:Variancehigh-variance  300.6548  155 0.4841207
-DomainVisual-only:Variancelow-variance   289.6419  155 0.4663580
-DomainAudio-only                         325.8516  310 0.5247607
-DomainVisual-only                        295.1484  310 0.4752393
-Variancehigh-variance                    333.5774  310 0.5372216
-Variancelow-variance                     287.4226  310 0.4627784
+DomainAudio-only:Variancehigh-variance   356.0404  161 0.5520813
+DomainAudio-only:Variancelow-variance    235.0280  161 0.3641738
+DomainVisual-only:Variancehigh-variance  338.1863  161 0.5243577
+DomainVisual-only:Variancelow-variance   360.7453  161 0.5593872
+DomainAudio-only                         295.5342  322 0.4581276
+DomainVisual-only                        349.4658  322 0.5418724
+Variancehigh-variance                    347.1134  322 0.5382195
+Variancelow-variance                     297.8866  322 0.4617805
+
+Wald-Type Statistc (WTS):
+                Statistic df      p-value
+Domain           16.58288  1 4.656943e-05
+Variance         12.65065  1 3.754355e-04
+Domain:Variance  27.05915  1 1.973241e-07
+
+ANOVA-Type Statistc (ATS):
+                Statistic df      p-value
+Domain           16.58288  1 4.656943e-05
+Variance         12.65065  1 3.754355e-04
+Domain:Variance  27.05915  1 1.973241e-07
+
+###### hypothesis testing 4 (Tsugaru shamisen x low-variance) ######
+
+ #----------------Nonparametric Paired t Test-------------------------------------------# 
+ 
+ - Sample Size:  161 
+ - Factor Levels:  Audio-only Visual-only 
+ - H0:  p<=1/2 
+ - Alternative Hypothesis:  True relative effect is greater than 1/2 
+ - Confidence Level: 95 % 
+ - Method: Brunner-Munzel (BM), Permutation (PERM) 
+ 
+ #--------------------------------------------------------------------------------------# 
+ 
+
+ #----------------Nonparametric Paired t Test-------------------------------------------# 
+ 
+ - Sample Size:  161 
+ - Factor Levels:  Audio-only Visual-only 
+ - H0:  p=1/2 
+ - Alternative Hypothesis:  True relative effect is less or greater than 1/2 
+ - Confidence Level: 90 % 
+ - Method: Brunner-Munzel (BM), Permutation (PERM) 
+ 
+ #--------------------------------------------------------------------------------------# 
+ 
+
+***Check confidence intervals for equivalence testing***
+     Lower p.hat Upper     T p.value
+BM   0.449   0.5 0.552 0.008   0.994
+PERM 0.449   0.5 0.552 0.008   0.988
+
+***Paired t-test (exploratory analysis)***
+
+	Paired t-test
+
+data:  df_i$score[df_i$domain == "Audio-only"] and df_i$score[df_i$domain == "Visual-only"]
+t = -2.7147e-16, df = 160, p-value = 0.5
+alternative hypothesis: true mean difference is less than 0
+95 percent confidence interval:
+       -Inf 0.03997607
+sample estimates:
+mean difference 
+  -6.559423e-18 
+
+
+***Effect size of the paired t-test (exploratory analysis)***
+[1] 0
+
+###### hypothesis testing 5 (Tsugaru shamisen x high-variance) ######
+
+ #----------------Nonparametric Paired t Test-------------------------------------------# 
+ 
+ - Sample Size:  161 
+ - Factor Levels:  Audio-only Visual-only 
+ - H0:  p>=1/2 
+ - Alternative Hypothesis:  True relative effect is less than 1/2 
+ - Confidence Level: 95 % 
+ - Method: Brunner-Munzel (BM), Permutation (PERM) 
+ 
+ #--------------------------------------------------------------------------------------# 
+ 
+
+ #----------------Nonparametric Paired t Test-------------------------------------------# 
+ 
+ - Sample Size:  161 
+ - Factor Levels:  Audio-only Visual-only 
+ - H0:  p=1/2 
+ - Alternative Hypothesis:  True relative effect is less or greater than 1/2 
+ - Confidence Level: 90 % 
+ - Method: Brunner-Munzel (BM), Permutation (PERM) 
+ 
+ #--------------------------------------------------------------------------------------# 
+ 
+
+***Check confidence intervals for equivalence testing***
+     Lower p.hat Upper      T p.value
+BM   0.354 0.402 0.450 -3.369   0.001
+PERM 0.354 0.402 0.449 -3.369   0.001
+
+***Paired t-test (exploratory analysis)***
+
+	Paired t-test
+
+data:  df_i$score[df_i$domain == "Audio-only"] and df_i$score[df_i$domain == "Visual-only"]
+t = 3.3994, df = 160, p-value = 0.0004262
+alternative hypothesis: true mean difference is greater than 0
+95 percent confidence interval:
+ 0.04399899        Inf
+sample estimates:
+mean difference 
+     0.08571429 
+
+
+***Effect size of the paired t-test (exploratory analysis)***
+[1] 0.2679132
+
+###### hypothesis testing 6 (Tsugaru shamisen) ######
+ Total number of observations :  644
+ Total Number of subjects :  161
+ Total Number of missing observations :  0 
+
+ Class level information 
+ ----------------------- 
+ Levels of Domain (sub-plot factor time1) :  2
+ Levels of Variance (sub-plot factor time2) :  2 
+
+ Abbreviations 
+ ----------------------- 
+ RankMeans = Rank means
+ Nobs = Number of observations
+ RTE = Relative treatment effect
+ Wald.test = Wald-type test statistic
+ ANOVA.test = ANOVA-type test statistic
+ covariance = Covariance matrix 
+ Note: The description output above will disappear by setting description=FALSE in the input. See the help file for details. 
+
+ LD F2 Model 
+ ----------------------- 
+ Check that the order of the time1 and time2 levels are correct.
+ Time1 level:   Audio-only Visual-only 
+ Time2 level:   high-variance low-variance 
+ If the order is not correct, specify the correct order in time1.order or time2.order.
+
+Model: 
+LD F2 Model 
+ 
+Call: 
+score ~ Domain * Variance
+
+Relative Treatment Effect (RTE):
+                                        RankMeans Nobs       RTE
+DomainAudio-only:Variancehigh-variance   377.3416  161 0.5851578
+DomainAudio-only:Variancelow-variance    299.6366  161 0.4644979
+DomainVisual-only:Variancehigh-variance  312.4814  161 0.4844431
+DomainVisual-only:Variancelow-variance   300.5404  161 0.4659012
+DomainAudio-only                         338.4891  322 0.5248278
+DomainVisual-only                        306.5109  322 0.4751722
+Variancehigh-variance                    344.9115  322 0.5348005
+Variancelow-variance                     300.0885  322 0.4651995
 
 Wald-Type Statistc (WTS):
                 Statistic df     p-value
-Domain           4.557055  1 0.032783409
-Variance         9.528882  1 0.002022633
-Domain:Variance  8.328079  1 0.003903692
+Domain           4.904471  1 0.026787252
+Variance         8.898990  1 0.002853284
+Domain:Variance  6.752594  1 0.009361149
 
 ANOVA-Type Statistc (ATS):
                 Statistic df     p-value
-Domain           4.557055  1 0.032783409
-Variance         9.528882  1 0.002022633
-Domain:Variance  8.328079  1 0.003903692
+Domain           4.904471  1 0.026787252
+Variance         8.898990  1 0.002853284
+Domain:Variance  6.752594  1 0.009361149
 [1] ""
 [1] "Piano x low-variance"             "Piano x high-variance"            "Piano"                            "Tsugaru shamisen x low-variance" 
 [5] "Tsugaru shamisen x high-variance" "Tsugaru shamisen"                
 
 p-value
-[1] 0.000000e+00 2.180000e-01 1.602930e-11 4.300000e-01 0.000000e+00 3.903692e-03
+[1] 0.000000e+00 1.700000e-01 1.973241e-07 4.920000e-01 0.000000e+00 9.361149e-03
 
 Relative effect (1, 2, 4, 5) and ANOVA-type statistic (3, 6)
-[1]  0.768000  0.476000 45.404166  0.506000  0.396000  8.328079
+[1]  0.690000  0.470000 27.059149  0.500000  0.402000  6.752594
 
 Effect size corresponding to Cohen's D (1, 2, 4, 5) and partial eta squared (3, 6)
-[1]  1.03559494 -0.08512917  0.07005907  0.02127025 -0.37294848  0.01185197
+[1]  0.701238286 -0.106447660  0.039277588  0.000000000 -0.350970638  0.008985523
 
 90% CI of adjusted partial eta squared (equivalence testing for the interaction effects of piano)
-0.039921955901988 - 0.0700590747050562 - 0.105501629794956
+0.0176848361059418 - 0.0392775875662251 - 0.0672289279931746
 
 90% CI of adjusted partial eta squared (equivalence testing for the interaction effects of Tsugaru shamisen)
-0.000846790535529669 - 0.0118519719904702 - 0.0309293329493695
+-0.000169102716118685 - 0.00898552313049534 - 0.0260631678942886

@@ -22,7 +22,7 @@ G_WID <- 6
 G_HEI <- 4.8
 
 ###### read data ######
-df_data <- read.csv(paste("./data/", INPUT_FILENAME, sep = ""), header = TRUE)
+df_data <- read.csv(paste(OUTPUTDIR, INPUT_FILENAME, sep = ""), header = TRUE)
 df_data <- df_data[df_data$domain %in% c("Audio-only", "Visual-only"), ]
 df_data <- df_data[!(df_data$data_id %in% DATAID_INVALID), ]
 
@@ -60,7 +60,7 @@ D = diag(diag(T))
 Lmd = diag(rep(1/(n - 1), a*b))
 
 ###### Hypothesis testing (paired two-sample tests) ######
-my_log <- file(paste("./output/", OUTPUT_FILEID, "_", FILEID, ".txt", sep = ""))
+my_log <- file(paste(OUTPUTDIR, OUTPUT_FILEID, "_", FILEID, ".txt", sep = ""))
 sink(my_log, append = FALSE, type = "output")
 sink(my_log, append = TRUE, type = "message")
 
@@ -118,6 +118,19 @@ for(i in 1:6) {
     cat("\n***Check confidence intervals for equivalence testing***\n")
     print(result_equiv$Analysis)
     
+    # Paired t-test (exploratory analysis)
+    cat("\n***Paired t-test (exploratory analysis)***\n")
+    if (i == 1 || i == 4) {
+      result = t.test(df_i$score[df_i$domain == "Audio-only"], df_i$score[df_i$domain == "Visual-only"], paired = TRUE, alternative = "less")
+    } else if(i == 2 || i == 5) {
+      result = t.test(df_i$score[df_i$domain == "Audio-only"], df_i$score[df_i$domain == "Visual-only"], paired = TRUE, alternative = "greater")
+    }
+    print(result)
+    
+    cat("\n***Effect size of the paired t-test (exploratory analysis)***\n")
+    es = lsr::cohensD(df_i$score[df_i$domain == "Audio-only"], df_i$score[df_i$domain == "Visual-only"], method = "paired")
+    print(es)
+    
   } else if(i == 3 || i == 6) {
     df_i <- data.frame(participant_id = df_stats$participant_id[idx], score = df_stats$score[idx], Domain = df_stats$domain[idx], Variance = df_stats$varcond[idx])
     
@@ -150,6 +163,7 @@ for(i in 1:6) {
     
     # Plot result
     g_i <- ggplot(data = result_effectsize$Conf.Int, aes(x = Time1, group = Time2, colour = Time2))
+    g_i <- g_i + scale_color_brewer(palette = "Dark2")
     g_i <- g_i + geom_errorbar(aes(ymin = Lower, ymax = Upper), width = 0.2, position = position_dodge(width = 0.2))
     g_i <- g_i + geom_point(aes(y = RTE, fill = Time2), position = position_dodge(width = 0.2), shape = 22)
     g_i <- g_i + geom_line(aes(y = RTE), position = position_dodge(width = 0.2))
@@ -158,7 +172,7 @@ for(i in 1:6) {
                       title = paste("Interaction effects and ", 100*(1 - al_CI), "% CI (", df_stats$instrument[idx][1], ")", sep = "")) + 
       theme(legend.position = "bottom", legend.title = element_blank(), plot.title = element_text(hjust = 0.5)) +
       ylim(0, 1)
-    ggsave(plot = g_i, file = paste("./output/", OUTPUT_FILEID, "_H", i, "_", FILEID, ".png", sep = ""), width = G_WID, height = G_HEI)
+    ggsave(plot = g_i, file = paste(OUTPUTDIR, OUTPUT_FILEID, "_H", i, "_", FILEID, ".png", sep = ""), width = G_WID, height = G_HEI)
   }
 }
 
@@ -175,9 +189,11 @@ print(es_conv_list)
 
 ###### Confidence interval of adjusted partial eta squared ######
 cat("\n90% CI of adjusted partial eta squared (equivalence testing for the interaction effects of piano)\n")
-cat(paste(petasq_lu_list[1, 1], " - ", es_conv_list[3], " - ", petasq_lu_list[1, 2], "\n", sep = ""))
+cat(paste(petasq_lu_list[1, 1], " - ", es_conv_list[3], " - ", petasq_lu_list[1, 2], sep = ""))
+cat("\n")
 
 cat("\n90% CI of adjusted partial eta squared (equivalence testing for the interaction effects of Tsugaru shamisen)\n")
-cat(paste(petasq_lu_list[2, 1], " - ", es_conv_list[6], " - ", petasq_lu_list[2, 2], "\n", sep = ""))
+cat(paste(petasq_lu_list[2, 1], " - ", es_conv_list[6], " - ", petasq_lu_list[2, 2], sep = ""))
+cat("\n")
 
 closeAllConnections()

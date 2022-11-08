@@ -9,12 +9,10 @@ COLNUM_DATAID <- c(53, 28)
 
 ###### read data ######
 T1 <- read.csv(file = "./data/Sight vs Sound回答フォーム_1 （回答）.csv", header = TRUE, fileEncoding="UTF-8-BOM")
-ROW_INVALID1 <- c(7, 22, 32, 44, 58, 88, 95, 96, 97, 113, 119, 135, 137, 138, 140)
 T1 <- T1[-ROW_INVALID1, ]
 T1 <- T1[T1[, COLNUM_DATAID[1]] != "", ]
 
 T2 <- read.csv(file = "./data/Sight vs Sound回答フォーム_2（回答）.csv", header = TRUE, fileEncoding="UTF-8-BOM")
-ROW_INVALID2 <- c(6, 13, 21, 38, 45, 59, 92, 99, 100, 120, 136, 139, 140, 142, 146, 153, 155)
 T2 <- T2[-ROW_INVALID2, ]
 T2 <- T2[T2[, COLNUM_DATAID[2]] != "", ]
 
@@ -154,4 +152,4 @@ for (m in 1:length(T)) {
 }
 
 ###### output ######
-write.csv(df_data, file = paste("./data/", OUTPUT_FILENAME, sep = ""), row.names = FALSE)
+write.csv(df_data, file = paste(OUTPUTDIR, OUTPUT_FILENAME, sep = ""), row.names = FALSE)

@@ -28,7 +28,24 @@
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper     T p.value
 BM   0.646 0.693 0.741 6.719       0
-PERM 0.645 0.693 0.741 6.719       0
+PERM 0.645 0.693 0.742 6.719       0
+
+***Paired t-test (exploratory analysis)***
+
+	Paired t-test
+
+data:  df_i$score[df_i$domain == "Audio-only"] and df_i$score[df_i$domain == "Visual-only"]
+t = -6.3631, df = 154, p-value = 1.075e-09
+alternative hypothesis: true mean difference is less than 0
+95 percent confidence interval:
+       -Inf -0.1202995
+sample estimates:
+mean difference 
+     -0.1625806 
+
+
+***Effect size of the paired t-test (exploratory analysis)***
+[1] 0.5110979
 
 ###### hypothesis testing 2 (Piano x high-variance) ######
 
@@ -59,7 +76,24 @@ PERM 0.645 0.693 0.741 6.719       0
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper      T p.value
 BM   0.425 0.476 0.528 -0.761   0.448
-PERM 0.426 0.476 0.527 -0.761   0.455
+PERM 0.426 0.476 0.527 -0.761   0.463
+
+***Paired t-test (exploratory analysis)***
+
+	Paired t-test
+
+data:  df_i$score[df_i$domain == "Audio-only"] and df_i$score[df_i$domain == "Visual-only"]
+t = 0.7327, df = 154, p-value = 0.2324
+alternative hypothesis: true mean difference is greater than 0
+95 percent confidence interval:
+ -0.0227342        Inf
+sample estimates:
+mean difference 
+     0.01806452 
+
+
+***Effect size of the paired t-test (exploratory analysis)***
+[1] 0.05885206
 
 ###### hypothesis testing 3 (Piano) ######
  Total number of observations :  620
@@ -146,7 +180,24 @@ Domain:Variance  25.31010  1 4.881470e-07
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper     T p.value
 BM   0.453 0.506 0.559 0.194   0.847
-PERM 0.453 0.506 0.559 0.194   0.853
+PERM 0.453 0.506 0.560 0.194   0.865
+
+***Paired t-test (exploratory analysis)***
+
+	Paired t-test
+
+data:  df_i$score[df_i$domain == "Audio-only"] and df_i$score[df_i$domain == "Visual-only"]
+t = -0.21017, df = 154, p-value = 0.4169
+alternative hypothesis: true mean difference is less than 0
+95 percent confidence interval:
+       -Inf 0.03547747
+sample estimates:
+mean difference 
+    -0.00516129 
+
+
+***Effect size of the paired t-test (exploratory analysis)***
+[1] 0.01688106
 
 ###### hypothesis testing 5 (Tsugaru shamisen x high-variance) ######
 
@@ -177,7 +228,24 @@ PERM 0.453 0.506 0.559 0.194   0.853
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper      T p.value
 BM   0.347 0.396 0.445 -3.498   0.001
-PERM 0.349 0.396 0.443 -3.498   0.001
+PERM 0.347 0.396 0.445 -3.498   0.000
+
+***Paired t-test (exploratory analysis)***
+
+	Paired t-test
+
+data:  df_i$score[df_i$domain == "Audio-only"] and df_i$score[df_i$domain == "Visual-only"]
+t = 3.5224, df = 154, p-value = 0.0002815
+alternative hypothesis: true mean difference is greater than 0
+95 percent confidence interval:
+ 0.04788908        Inf
+sample estimates:
+mean difference 
+     0.09032258 
+
+
+***Effect size of the paired t-test (exploratory analysis)***
+[1] 0.2829237
 
 ###### hypothesis testing 6 (Tsugaru shamisen) ######
  Total number of observations :  620
@@ -239,7 +307,7 @@ Domain:Variance  8.328079  1 0.003903692
 [5] "Tsugaru shamisen x high-variance" "Tsugaru shamisen"                
 
 p-value
-[1] 0.000000e+00 2.230000e-01 4.881470e-07 4.120000e-01 0.000000e+00 3.903692e-03
+[1] 0.000000e+00 2.310000e-01 4.881470e-07 4.190000e-01 0.000000e+00 3.903692e-03
 
 Relative effect (1, 2, 4, 5) and ANOVA-type statistic (3, 6)
 [1]  0.693000  0.476000 25.310096  0.506000  0.396000  8.328079
