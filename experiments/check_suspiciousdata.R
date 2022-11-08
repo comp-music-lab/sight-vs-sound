@@ -5,6 +5,7 @@ library(ggpubr)
 ###### Configuration ######
 G_WID <- 8
 G_HEI <- 4.8
+INPUT_FILENAME <- "datatable.csv"
 
 ###### read data ######
 df_data <- read.csv(paste(OUTPUTDIR, INPUT_FILENAME, sep = ""), header = TRUE)
@@ -29,14 +30,14 @@ for (i in 1:2) {
     scale_color_brewer(palette = "Set2")
   g <- g +
     geom_point(data = df_suspicious[df_suspicious$domain == "Audio-only" & df_suspicious$varcond == "low-variance" & df_suspicious$instrument == INSTRUMENT[i], ],
-               aes(y = score, x = participant_id, colour = varcond, shape = domain), position = position_nudge(- 0.20)) + 
+               aes(y = score, x = participant_id, shape = varcond, colour = domain), position = position_nudge(- 0.20)) + 
     geom_point(data = df_suspicious[df_suspicious$domain == "Visual-only" & df_suspicious$varcond == "low-variance" & df_suspicious$instrument == INSTRUMENT[i], ],
-               aes(y = score, x = participant_id, colour = varcond, shape = domain), position = position_nudge(- 0.10)) + 
+               aes(y = score, x = participant_id, shape = varcond, colour = domain), position = position_nudge(- 0.10)) + 
     geom_point(data = df_suspicious[df_suspicious$domain == "Audio-only" & df_suspicious$varcond == "high-variance" & df_suspicious$instrument == INSTRUMENT[i], ],
-               aes(y = score, x = participant_id, colour = varcond, shape = domain), position = position_nudge(+ 0.10)) + 
+               aes(y = score, x = participant_id, shape = varcond, colour = domain), position = position_nudge(+ 0.10)) + 
     geom_point(data = df_suspicious[df_suspicious$domain == "Visual-only" & df_suspicious$varcond == "high-variance" & df_suspicious$instrument == INSTRUMENT[i], ],
-               aes(y = score, x = participant_id, colour = varcond, shape = domain), position = position_nudge(+ 0.20)) + 
-    guides(colour = guide_legend(title = "Variance"), shape = guide_legend(title = "Domain")) + 
+               aes(y = score, x = participant_id, shape = varcond, colour = domain), position = position_nudge(+ 0.20)) + 
+    guides(colour = guide_legend(title = "Domain"), shape = guide_legend(title = "Variance")) + 
     scale_y_continuous(breaks = c(0.0, 0.2, 0.4, 0.6, 0.8, 1.0), limits = c(0, 1))
 
   if(i == 1) {
