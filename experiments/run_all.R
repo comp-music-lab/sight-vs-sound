@@ -22,7 +22,8 @@ source("analysis.R")
 rm(list = ls())
 OUTPUTDIR <- "./output/with_suspicious/"
 
-ROW_INVALID1 <- c(32, 44, 88, 95, 113, 119, 137, 138, 140)
+#ROW_INVALID1 <- c(32, 44, 88, 95, 113, 119, 137, 138, 140)
+ROW_INVALID1 <- c(32, 119, 137, 138, 140)
 ROW_INVALID2 <- c(13, 21, 38, 45, 59, 92, 99, 100, 120, 136, 139, 140, 142, 146, 153, 155)
 source("formatting.R")
 

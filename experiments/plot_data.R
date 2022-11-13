@@ -2,6 +2,7 @@
 library(ggplot2)
 library(gridExtra)
 library(RColorBrewer)
+library(ggpubr)
 
 ###### Configuration ######
 INPUT_FILENAME <- "datatable.csv"
@@ -15,26 +16,6 @@ G_Y_SIZE <- 8
 G_X_ROTATE <- -0
 G_WID <- 8
 G_HEI <- 4.8
-
-G_COLPALETE <- c("Set2", "Dark2")
-G_YL = list(c(0, 1), c(-0.5, 0.5))
-G_YLABELSTR = c("Percent correct", "Sight-vs-sound effect")
-G_YBASE = c(0.5, 0)
-G_XLIMITS = list(c("Audio-only.low-variance",
-                   "Visual-only.low-variance",
-                   "Audio-Visual.low-variance",
-                   "Audio-only.high-variance",
-                   "Visual-only.high-variance",
-                   "Audio-Visual.high-variance"),
-                 c("low-variance", "high-variance"))
-G_XLABELS = list(c("Audio-only.low-variance" = "low-var x AO",
-                   "Visual-only.low-variance" = "low-var x VO",
-                   "Audio-Visual.low-variance" = "low-var x AV",
-                   "Audio-only.high-variance" = "high-var x AO",
-                   "Visual-only.high-variance" = "high-var x VO",
-                   "Audio-Visual.high-variance" = "high-var x AV"),
-                 c("low-variance" = "low-var\n(Visual - Audio)",
-                   "high-variance" = "high-var\n(Visual - Audio)"))
 
 ###### Read data ######
 df_data <- read.csv(paste(OUTPUTDIR, INPUT_FILENAME, sep = ""), header = TRUE)
@@ -95,9 +76,7 @@ df_CLIPORDER$plotname <- sapply(
         paste(sapply(strsplit(x, " "), function(y) return(paste(substring(y[1], 1, 1), ".", substring(y[2], 1, 1), ".", sep = ""))), collapse = "\nvs\n")
       )
     )
-df_CLIPORDER$plotname[df_CLIPORDER$Instrument == "Piano"] <- paste(df_CLIPORDER$plotname[df_CLIPORDER$Instrument == "Piano"], "\n(p)", sep="")
-df_CLIPORDER$plotname[df_CLIPORDER$Instrument == "Tsugaru shamisen"] <- paste(df_CLIPORDER$plotname[df_CLIPORDER$Instrument == "Tsugaru shamisen"], "\n(t-s)", sep="")
-df_CLIPORDER$plotname[df_CLIPORDER$clipID %in% c(21:25)] <- paste(df_CLIPORDER$plotname[df_CLIPORDER$clipID %in% c(21:25)], "*", sep="")
+df_CLIPORDER$plotname[df_CLIPORDER$clipID %in% c(21:25)] <- paste(df_CLIPORDER$plotname[df_CLIPORDER$clipID %in% c(21:25)], "\n*", sep="")
 
 df_CLIPORDER <- df_CLIPORDER[order(df_CLIPORDER$AVscorediff, decreasing = TRUE), ]
 df_CLIPORDER <- df_CLIPORDER[order(df_CLIPORDER$Instrument), ]
@@ -116,60 +95,101 @@ for (i in 1:length(CLIPID_ORDER)) {
 df_pair$Domain <- factor(df_pair$Domain, levels = c("Audio-only", "Visual-only", "Audio-Visual"))
 df_pair$clipID <- as.character(df_pair$clipID)
 
-###### [Figure 1 & 2] Create ggplot objects ######
-df_list = list(df_stats, df_diff)
-g_list <- vector(mode = "list", length = 2)
+###### [Figure 1] Create ggplot objects ######
 INSTRUMENT <- sort(unique(df_stats$Instrument))
+VARCOND <- sort(unique(df_stats$Variance), decreasing = TRUE)
+g_list <- vector(mode = "list", length = length(INSTRUMENT)*length(VARCOND))
 
-for (j in 1:2) {
-  df_j <- df_list[[j]]
-  
-  for (i in 1:length(INSTRUMENT)) {
-    idx <- df_j$Instrument == INSTRUMENT[i]
-    df_i <- df_j[idx, ]
-    
-    # data plot
-    if (j == 1) {
-      g_list[[i]] <- ggplot(data = df_i, aes(x = interaction(Domain, Variance), y = score, group = interaction(Domain, Variance), colour = Domain))
-    }else if (j == 2) {
-      g_list[[i]] <- ggplot(data = df_i, aes(x = Variance, y = score, group = Variance, colour = Variance))
-    }
-    
-    g_list[[i]] <- g_list[[i]] +
+k <- 0
+for (i in 1:length(INSTRUMENT)) {
+  for (j in 1:length(VARCOND)) {
+    k <- k + 1
+    df_k <- df_stats[df_stats$Instrument == INSTRUMENT[i] & df_stats$Variance == VARCOND[j], ]
+    df_k$score <- df_k$score*100
+      
+    g_list[[k]] <- ggplot(data = df_k,
+                          aes(x = Domain, y = score, group = Domain, colour = Domain)) +
       geom_violin(adjust = G_VIOLIN_ADJUST, trim = TRUE, scale = G_VIOLIN_SCALE) +
-      geom_dotplot(binaxis = "y", stackdir = "center", binwidth = 0.02)
-
-    if (j == 1) {
-      g_list[[i]] <- g_list[[i]] +
-        geom_line(data = df_i[df_i$Domain %in% c("Audio-only", "Visual-only"), ], aes(x = interaction(Domain, Variance), y = score, group = interaction(participant_id, Variance)),
-                  color = "black", alpha = 0.25, linetype = "dashed")
+      geom_dotplot(binaxis = "y", stackdir = "center", binwidth = 0.5, show.legend = FALSE) +
+      geom_line(data = df_k[df_k$Domain %in% c("Audio-only", "Visual-only"), ],
+                aes(x = Domain, y = score, group = participant_id),
+                color = "black", alpha = 0.25, linetype = "dashed", show.legend = FALSE) +
+      geom_hline(yintercept = 0.5*100, linetype = "dotted", color = "grey27", show.legend = FALSE) +
+      ylim(c(0, 100)) + 
+      stat_summary(fun = "mean", geom = "point", shape = 23, size = 2., fill = "#DF536B", show.legend = FALSE) +
+      labs(x = "", y = "") +
+      theme(axis.text.x = element_blank()) +
+      scale_x_discrete(limits = c("Audio-Visual", "Audio-only", "Visual-only")) + 
+      scale_colour_brewer(name = "Domain",
+                          palette = "Set2",
+                          breaks = c("Audio-Visual", "Audio-only", "Visual-only"),
+                          labels = c("Audio + visual\n(exploratory)", "Audio-only", "Visual-only")) 
+    
+    if(j == 1) {
+      g_list[[k]] <- g_list[[k]] + labs(y = "Percent correct") +
+        theme(axis.title.y = element_text(size = G_Y_SIZE), axis.text.y = element_text(size = G_Y_SIZE))
+    } else if(j == length(VARCOND)) {
+      ylabeltext <- sub(" ", "\n", INSTRUMENT[i])
+      g_list[[k]] <- g_list[[k]] + annotate("text", x = 3.7, y = 0.5*100, label = ylabeltext, size = 4.5, hjust = 0) +
+        coord_cartesian(xlim = c(1, 3), clip = "off")     
     }
     
-    # decoration
-    g_list[[i]] <- g_list[[i]] +
-      scale_color_brewer(palette = G_COLPALETE[j]) + 
-      geom_hline(yintercept = G_YBASE[j], linetype = "dotted", color = "grey27") +
-      ylim(G_YL[[j]]) + 
-      stat_summary(fun = "mean", geom = "point", shape = 23, size = 2., fill = "#DF536B") +
-      labs(x = "", y = G_YLABELSTR[j], title = INSTRUMENT[i]) +
-      theme(legend.position = "none",
-            plot.title = element_text(hjust = 0.5),
-            axis.text.x = element_text(size = G_X_SIZE, angle = G_X_ROTATE),
-            axis.text.y = element_text(size = G_Y_SIZE),
-            axis.title.y = element_text(size = G_Y_SIZE)
-            ) + 
-      scale_x_discrete(limits = G_XLIMITS[[j]], labels = G_XLABELS[[j]])
+    if(i == 1) {
+      titlestr <- VARCOND[j]
+      substr(titlestr, 1, 1) <- toupper(substr(titlestr, 1, 1))
+      g_list[[k]] <- g_list[[k]] + labs(title = titlestr) + theme(plot.title = element_text(size = 16, hjust = 0.5))
+    }
   }
-  
-  ###### Merge ggplot objects ######
-  g <- grid.arrange(grobs = g_list, nrow = 2)
-  
-  ###### Save the figure ######
-  ggsave(file = paste(OUTPUTDIR, OUTPUT_FILEID[j], "_ggplots_", FILEID, ".png", sep = ""),
-         plot = g, width = G_WID, height = G_HEI)
 }
 
+g <- ggarrange(plotlist=g_list, ncol=2, nrow=2, common.legend=TRUE, legend="right")
+g <- annotate_figure(g, top = text_grob("a", hjust = 0, x = 0, size =  14))
+
+ggsave(file = paste(OUTPUTDIR, "analysis_raw", "_ggplots_", FILEID, ".png", sep = ""),
+       plot = g, width = G_WID, height = G_HEI)
+
+###### [Figure 2] Create ggplot objects ######
+INSTRUMENT <- sort(unique(df_stats$Instrument))
+g_list <- vector(mode = "list", length = length(INSTRUMENT))
+
+for (i in 1:length(INSTRUMENT)) {
+  idx <- df_diff$Instrument == INSTRUMENT[i]
+  df_i <- df_diff[idx, ]
+  df_i$score <- df_i$score*100
+  
+  # data plot
+  g_list[[i]] <- ggplot(data = df_i, aes(x = Variance, y = score, group = Variance, colour = Variance))
+  
+  g_list[[i]] <- g_list[[i]] +
+    geom_violin(adjust = G_VIOLIN_ADJUST, trim = TRUE, scale = G_VIOLIN_SCALE) +
+    geom_dotplot(binaxis = "y", stackdir = "center", binwidth = 3.5)
+  
+  # decoration
+  g_list[[i]] <- g_list[[i]] +
+    scale_color_brewer(palette = "Dark2") + 
+    geom_hline(yintercept = 0, linetype = "dotted", color = "grey27") +
+    ylim(c(-0.5*100, 0.5*100)) + 
+    stat_summary(fun = "mean", geom = "point", shape = 23, size = 2., fill = "#DF536B") +
+    labs(x = "", y = "Sight-vs-sound effect", title = INSTRUMENT[i]) +
+    theme(legend.position = "none",
+          plot.title = element_text(hjust = 0.5),
+          axis.text.x = element_text(size = G_X_SIZE, angle = G_X_ROTATE),
+          axis.text.y = element_text(size = G_Y_SIZE),
+          axis.title.y = element_text(size = G_Y_SIZE)
+    ) + 
+    scale_x_discrete(limits = c("low-variance", "high-variance"),
+                     labels = c("Low-variance\n(Visual - Audio)", "High-variance\n(Visual - Audio)"))
+}
+
+g <- grid.arrange(grobs = g_list, nrow = 2)
+
+ggsave(file = paste(OUTPUTDIR, OUTPUT_FILEID[2], "_ggplots_", FILEID, ".png", sep = ""),
+       plot = g, width = G_WID, height = G_HEI)
+
 ###### [Figure 3 & 4] Create ggplot objects ######
+df_competition$score <- df_competition$score * 100
+df_pair$score <- df_pair$score * 100
+
 for (j in 1:2) {
   if (j == 1) {
     g <- ggplot() + 
@@ -199,8 +219,8 @@ for (j in 1:2) {
   
   g <- g +
     scale_color_brewer(palette = "Set2") +
-    ylim(0, 1) +
-    labs(x = "", y = "Percent correct", title = G_TITLESTR) +
+    ylim(0, 1*100) +
+    labs(x = "", y = "Percent accuracy", title = G_TITLESTR) +
     theme(plot.title = element_text(hjust = 0.5),
           axis.text.x = element_text(size = G_X_SIZE, angle = G_X_ROTATE),
           axis.text.y = element_text(size = G_Y_SIZE),
@@ -208,6 +228,8 @@ for (j in 1:2) {
     )
   
   if (j == 1) {
+    textcolor <- c(rep(rgb(128/255, 64/255, 0/255), 4), rep(rgb(153/255, 0/255, 153/255), 3))
+    
     g <- g + 
       scale_x_discrete(
         limits = c("International Franz Liszt Piano Competition",
@@ -217,11 +239,15 @@ for (j in 1:2) {
                    "International Hirosaki Tsugaru shamisen Competition",
                    "International Michinoku Tsugaru shamisen Competition",
                    "International Biwako Tsugaru shamisen Competition"),
-        labels = c("Liszt\n(p)", "Van Cliburn\n(p)", "San Marino\n(p)", "Cleveland\n(p)", "Hirosaki\n(t-s)", "Michinoku\n(t-s)", "Biwako\n(t-s)")
-      )
+        labels = c("Liszt", "Van Cliburn", "San Marino", "Cleveland\n*", "Hirosaki", "Michinoku", "Biwako")
+      ) + 
+      theme(axis.text.x = element_text(colour = textcolor))
   }else if (j == 2) {
+    textcolor <- ifelse(df_CLIPORDER$Instrument == "Piano", rgb(128/255, 64/255, 0/255), rgb(153/255, 0/255, 153/255))
+    
     g <- g + 
-      scale_x_discrete(limits = CLIPID_ORDER, labels = CLIPID_PLOTNAME)
+      scale_x_discrete(limits = CLIPID_ORDER, labels = CLIPID_PLOTNAME) + 
+      theme(axis.text.x = element_text(colour = textcolor))
   }
   
   ggsave(file = paste(OUTPUTDIR, OUTPUT_FILEID[2 + j], "_ggplots_", FILEID, ".png", sep = ""),

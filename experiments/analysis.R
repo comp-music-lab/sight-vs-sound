@@ -162,16 +162,22 @@ for(i in 1:6) {
     petasq_lu_list[k, ] <- petasq_lu_list[k, ] - (1 - petasq_lu_list[k, ]) * df_effect/df_error
     
     # Plot result
+    titlestr <- ""
+    #titlestr <- paste("Interaction effects and ", 100*(1 - al_CI), "% CI (", df_stats$instrument[idx][1], ")", sep = "")
+    
     g_i <- ggplot(data = result_effectsize$Conf.Int, aes(x = Time1, group = Time2, colour = Time2))
     g_i <- g_i + scale_color_brewer(palette = "Dark2")
     g_i <- g_i + geom_errorbar(aes(ymin = Lower, ymax = Upper), width = 0.2, position = position_dodge(width = 0.2))
     g_i <- g_i + geom_point(aes(y = RTE, fill = Time2), position = position_dodge(width = 0.2), shape = 22)
     g_i <- g_i + geom_line(aes(y = RTE), position = position_dodge(width = 0.2))
     g_i <- g_i + geom_hline(yintercept = 0.5, linetype = "dotted", color = "grey27")
-    g_i <- g_i + labs(x = "", y = "Relative Effects",
-                      title = paste("Interaction effects and ", 100*(1 - al_CI), "% CI (", df_stats$instrument[idx][1], ")", sep = "")) + 
+    g_i <- g_i + labs(x = "", y = "Relative Effects", title = titlestr) + 
       theme(legend.position = "bottom", legend.title = element_blank(), plot.title = element_text(hjust = 0.5)) +
       ylim(0, 1)
+    
+    lebeltext <- ifelse(k == 1, "b", "c")
+    g_i <- annotate_figure(g_i, top = text_grob(lebeltext, hjust = 0, x = 0, size =  20))
+    
     ggsave(plot = g_i, file = paste(OUTPUTDIR, OUTPUT_FILEID, "_H", i, "_", FILEID, ".png", sep = ""), width = G_WID, height = G_HEI)
   }
 }
