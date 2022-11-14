@@ -19,6 +19,10 @@ T2 <- T2[T2[, COLNUM_DATAID[2]] != "", ]
 T <- list(T1, T2)
 S <- read.csv("./data/stimuli.csv", header = TRUE)
 
+###### check the portion of audio answers ######
+portion_audio <- sum(T2[, 43] == "聴覚情報")/dim(T2)[1]
+cat(paste(sum(T2[, 43] == "聴覚情報"), " out of ", dim(T2)[1], " (valid) pariticipants (", portion_audio*100, "%)\n", sep =""))
+
 ###### format stimuli master data ######
 idx_1st_AO <- substr(S[, 2], nchar(S[, 2]), nchar(S[, 2])) == "1"
 idx_2nd_AO <- substr(S[, 2], nchar(S[, 2]), nchar(S[, 2])) == "2"

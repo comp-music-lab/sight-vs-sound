@@ -126,7 +126,7 @@ for (i in 1:length(INSTRUMENT)) {
                           labels = c("Audio + visual\n(exploratory)", "Audio-only", "Visual-only")) 
     
     if(j == 1) {
-      g_list[[k]] <- g_list[[k]] + labs(y = "Percent correct") +
+      g_list[[k]] <- g_list[[k]] + labs(y = "Percent accuracy") +
         theme(axis.title.y = element_text(size = G_Y_SIZE), axis.text.y = element_text(size = G_Y_SIZE))
     } else if(j == length(VARCOND)) {
       ylabeltext <- sub(" ", "\n", INSTRUMENT[i])

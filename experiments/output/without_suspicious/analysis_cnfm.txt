@@ -28,7 +28,7 @@
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper     T p.value
 BM   0.646 0.693 0.741 6.719       0
-PERM 0.647 0.693 0.739 6.719       0
+PERM 0.646 0.693 0.740 6.719       0
 
 ***Paired t-test (exploratory analysis)***
 
@@ -76,7 +76,7 @@ mean difference
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper      T p.value
 BM   0.425 0.476 0.528 -0.761   0.448
-PERM 0.425 0.476 0.528 -0.761   0.447
+PERM 0.424 0.476 0.529 -0.761   0.455
 
 ***Paired t-test (exploratory analysis)***
 
@@ -180,7 +180,7 @@ Domain:Variance  25.31010  1 4.881470e-07
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper     T p.value
 BM   0.453 0.506 0.559 0.194   0.847
-PERM 0.453 0.506 0.559 0.194   0.868
+PERM 0.455 0.506 0.558 0.194   0.837
 
 ***Paired t-test (exploratory analysis)***
 
@@ -228,7 +228,7 @@ mean difference
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper      T p.value
 BM   0.347 0.396 0.445 -3.498   0.001
-PERM 0.347 0.396 0.445 -3.498   0.000
+PERM 0.347 0.396 0.445 -3.498   0.001
 
 ***Paired t-test (exploratory analysis)***
 
@@ -307,7 +307,7 @@ Domain:Variance  8.328079  1 0.003903692
 [5] "Tsugaru shamisen x high-variance" "Tsugaru shamisen"                
 
 p-value
-[1] 0.000000e+00 2.300000e-01 4.881470e-07 4.220000e-01 1.000000e-03 3.903692e-03
+[1] 0.000000e+00 2.190000e-01 4.881470e-07 4.330000e-01 0.000000e+00 3.903692e-03
 
 Relative effect (1, 2, 4, 5) and ANOVA-type statistic (3, 6)
 [1]  0.693000  0.476000 25.310096  0.506000  0.396000  8.328079

@@ -175,8 +175,10 @@ for(i in 1:6) {
       theme(legend.position = "bottom", legend.title = element_blank(), plot.title = element_text(hjust = 0.5)) +
       ylim(0, 1)
     
-    lebeltext <- ifelse(k == 1, "b", "c")
-    g_i <- annotate_figure(g_i, top = text_grob(lebeltext, hjust = 0, x = 0, size =  20))
+    labeltext <- ifelse(k == 1, "b", "c")
+    g_i <- annotate_figure(g_i, top = text_grob(labeltext, hjust = 0, x = 0, size =  20))
+    labeltext <- ifelse(k == 1, "Piano", "Tsugaru-shamisen")
+    g_i <- g_i + annotate("text", x = 0.35, y = 0.8, label = labeltext, size = 8)
     
     ggsave(plot = g_i, file = paste(OUTPUTDIR, OUTPUT_FILEID, "_H", i, "_", FILEID, ".png", sep = ""), width = G_WID, height = G_HEI)
   }
