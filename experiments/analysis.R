@@ -172,13 +172,14 @@ for(i in 1:6) {
     g_i <- g_i + geom_line(aes(y = RTE), position = position_dodge(width = 0.2))
     g_i <- g_i + geom_hline(yintercept = 0.5, linetype = "dotted", color = "grey27")
     g_i <- g_i + labs(x = "", y = "Relative Effects", title = titlestr) + 
-      theme(legend.position = "bottom", legend.title = element_blank(), plot.title = element_text(hjust = 0.5)) +
+      theme(legend.position = "bottom", legend.title = element_blank(), plot.title = element_text(hjust = 0.5),
+            legend.text = element_text(size = 13), axis.title.y = element_text(size = 14), axis.text.x = element_text(size = 12)) + 
       ylim(0, 1)
     
     labeltext <- ifelse(k == 1, "b", "c")
     g_i <- annotate_figure(g_i, top = text_grob(labeltext, hjust = 0, x = 0, size =  20))
     labeltext <- ifelse(k == 1, "Piano", "Tsugaru-shamisen")
-    g_i <- g_i + annotate("text", x = 0.35, y = 0.8, label = labeltext, size = 8)
+    g_i <- g_i + coord_cartesian(xlim = c(0, 1), ylim = c(0, 1), clip = "off") + annotate("text", x = 0.55, y = 0.91, label = labeltext, size = 8)
     
     ggsave(plot = g_i, file = paste(OUTPUTDIR, OUTPUT_FILEID, "_H", i, "_", FILEID, ".png", sep = ""), width = G_WID, height = G_HEI)
   }

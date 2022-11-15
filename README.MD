@@ -1,4 +1,4 @@
-# Sight vs. sound in the judgment of music performance: Cross-cultural evidence from classical piano and Tsugaru shamisen competitions. 
+# Sight vs. sound judgments of music performance depend on relative performer quality: Cross-cultural evidence from classical piano and Tsugaru shamisen competitions [Stage 2 Registered Report]. Preprint: https://doi.org/10.31234/osf.io/xky4j
 ## Code and source data
 
 Chiba, G., Ozaki, Y., Fujii, S. & Savage, P.

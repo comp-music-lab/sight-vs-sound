@@ -28,7 +28,7 @@
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper     T p.value
 BM   0.637 0.684 0.731 6.521       0
-PERM 0.637 0.684 0.731 6.521       0
+PERM 0.637 0.684 0.730 6.521       0
 
 ***Paired t-test (exploratory analysis)***
 
@@ -76,7 +76,7 @@ mean difference
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper      T p.value
 BM   0.421 0.472 0.522 -0.929   0.354
-PERM 0.421 0.472 0.522 -0.929   0.343
+PERM 0.421 0.472 0.523 -0.929   0.342
 
 ***Paired t-test (exploratory analysis)***
 
@@ -150,6 +150,7 @@ ANOVA-Type Statistc (ATS):
 Domain           16.06658  1 6.115381e-05
 Variance         14.38603  1 1.489031e-04
 Domain:Variance  24.92107  1 5.972599e-07
+Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 
 ###### hypothesis testing 4 (Tsugaru shamisen x low-variance) ######
 
@@ -179,8 +180,8 @@ Domain:Variance  24.92107  1 5.972599e-07
 
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper      T p.value
-BM   0.449 0.499 0.550 -0.023   0.982
-PERM 0.449 0.499 0.549 -0.023   0.992
+BM   0.449 0.499  0.55 -0.023   0.982
+PERM 0.449 0.499  0.55 -0.023   0.980
 
 ***Paired t-test (exploratory analysis)***
 
@@ -227,8 +228,8 @@ mean difference
 
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper      T p.value
-BM   0.350 0.397 0.445 -3.571   0.000
-PERM 0.348 0.397 0.446 -3.571   0.001
+BM    0.35 0.397 0.445 -3.571   0.000
+PERM  0.35 0.397 0.445 -3.571   0.001
 
 ***Paired t-test (exploratory analysis)***
 
@@ -302,12 +303,13 @@ ANOVA-Type Statistc (ATS):
 Domain           5.659096  1 0.017365067
 Variance         7.423214  1 0.006438769
 Domain:Variance  7.581290  1 0.005897723
+Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 [1] ""
 [1] "Piano x low-variance"             "Piano x high-variance"            "Piano"                            "Tsugaru shamisen x low-variance" 
 [5] "Tsugaru shamisen x high-variance" "Tsugaru shamisen"                
 
 p-value
-[1] 0.000000e+00 1.670000e-01 5.972599e-07 5.100000e-01 0.000000e+00 5.897723e-03
+[1] 0.000000e+00 1.760000e-01 5.972599e-07 5.180000e-01 0.000000e+00 5.897723e-03
 
 Relative effect (1, 2, 4, 5) and ANOVA-type statistic (3, 6)
 [1]  0.68400  0.47200 24.92107  0.49900  0.39700  7.58129

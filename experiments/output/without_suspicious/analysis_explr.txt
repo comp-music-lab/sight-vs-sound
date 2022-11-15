@@ -28,7 +28,7 @@
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper      T p.value
 BM   0.728 0.768 0.808 11.162       0
-PERM 0.729 0.768 0.808 11.162       0
+PERM 0.728 0.768 0.808 11.162       0
 
 ***Paired t-test (exploratory analysis)***
 
@@ -76,7 +76,7 @@ mean difference
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper      T p.value
 BM   0.425 0.476 0.528 -0.761   0.448
-PERM 0.425 0.476 0.528 -0.761   0.451
+PERM 0.425 0.476 0.528 -0.761   0.441
 
 ***Paired t-test (exploratory analysis)***
 
@@ -150,6 +150,7 @@ ANOVA-Type Statistc (ATS):
 Domain           30.97872  1 2.608726e-08
 Variance         13.83685  1 1.993872e-04
 Domain:Variance  45.40417  1 1.602930e-11
+Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 
 ###### hypothesis testing 4 (Tsugaru shamisen x low-variance) ######
 
@@ -180,7 +181,7 @@ Domain:Variance  45.40417  1 1.602930e-11
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper     T p.value
 BM   0.453 0.506 0.559 0.194   0.847
-PERM 0.453 0.506 0.559 0.194   0.850
+PERM 0.454 0.506 0.559 0.194   0.842
 
 ***Paired t-test (exploratory analysis)***
 
@@ -228,7 +229,7 @@ mean difference
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper      T p.value
 BM   0.347 0.396 0.445 -3.498   0.001
-PERM 0.347 0.396 0.445 -3.498   0.001
+PERM 0.347 0.396 0.445 -3.498   0.000
 
 ***Paired t-test (exploratory analysis)***
 
@@ -302,12 +303,13 @@ ANOVA-Type Statistc (ATS):
 Domain           4.557055  1 0.032783409
 Variance         9.528882  1 0.002022633
 Domain:Variance  8.328079  1 0.003903692
+Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 [1] ""
 [1] "Piano x low-variance"             "Piano x high-variance"            "Piano"                            "Tsugaru shamisen x low-variance" 
 [5] "Tsugaru shamisen x high-variance" "Tsugaru shamisen"                
 
 p-value
-[1] 0.000000e+00 2.300000e-01 1.602930e-11 4.280000e-01 0.000000e+00 3.903692e-03
+[1] 0.000000e+00 2.300000e-01 1.602930e-11 4.210000e-01 0.000000e+00 3.903692e-03
 
 Relative effect (1, 2, 4, 5) and ANOVA-type statistic (3, 6)
 [1]  0.768000  0.476000 45.404166  0.506000  0.396000  8.328079
