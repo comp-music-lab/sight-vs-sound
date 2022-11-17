@@ -1,0 +1,144 @@
+##### Piano x Audio-only x high-variance: Testing for versus at chance (50%) #####
+	One Sample t-test
+
+data:  df_stats$score[idx]
+t = 4.0627, df = 154, p-value = 7.705e-05
+alternative hypothesis: true mean is not equal to 0.5
+5 percent confidence interval:
+ 0.5717762 0.5740303
+sample estimates:
+mean of x 
+0.5729032 
+
+##### Piano x Audio-only x low-variance: Testing for versus at chance (50%) #####
+	One Sample t-test
+
+data:  df_stats$score[idx]
+t = -4.3972, df = 154, p-value = 2.035e-05
+alternative hypothesis: true mean is not equal to 0.5
+5 percent confidence interval:
+ 0.4195117 0.4217786
+sample estimates:
+mean of x 
+0.4206452 
+
+##### Piano x Audio-Visual x high-variance: Testing for versus at chance (50%) #####
+	One Sample t-test
+
+data:  df_stats$score[idx]
+t = 5.1985, df = 159, p-value = 6.096e-07
+alternative hypothesis: true mean is not equal to 0.5
+5 percent confidence interval:
+ 0.5926174 0.5948826
+sample estimates:
+mean of x 
+  0.59375 
+
+##### Piano x Audio-Visual x low-variance: Testing for versus at chance (50%) #####
+	One Sample t-test
+
+data:  df_stats$score[idx]
+t = 0.45063, df = 159, p-value = 0.6529
+alternative hypothesis: true mean is not equal to 0.5
+5 percent confidence interval:
+ 0.5053789 0.5071211
+sample estimates:
+mean of x 
+  0.50625 
+
+##### Piano x Visual-only x high-variance: Testing for versus at chance (50%) #####
+	One Sample t-test
+
+data:  df_stats$score[idx]
+t = 3.1138, df = 154, p-value = 0.002203
+alternative hypothesis: true mean is not equal to 0.5
+5 percent confidence interval:
+ 0.5537325 0.5559449
+sample estimates:
+mean of x 
+0.5548387 
+
+##### Piano x Visual-only x low-variance: Testing for versus at chance (50%) #####
+	One Sample t-test
+
+data:  df_stats$score[idx]
+t = 4.4804, df = 154, p-value = 1.445e-05
+alternative hypothesis: true mean is not equal to 0.5
+5 percent confidence interval:
+ 0.5820591 0.5843925
+sample estimates:
+mean of x 
+0.5832258 
+
+##### Tsugaru shamisen x Audio-only x high-variance: Testing for versus at chance (50%) #####
+	One Sample t-test
+
+data:  df_stats$score[idx]
+t = 8.056, df = 154, p-value = 2.021e-13
+alternative hypothesis: true mean is not equal to 0.5
+5 percent confidence interval:
+ 0.6529914 0.6553957
+sample estimates:
+mean of x 
+0.6541935 
+
+##### Tsugaru shamisen x Audio-only x low-variance: Testing for versus at chance (50%) #####
+	One Sample t-test
+
+data:  df_stats$score[idx]
+t = 2.6275, df = 154, p-value = 0.009472
+alternative hypothesis: true mean is not equal to 0.5
+5 percent confidence interval:
+ 0.5421925 0.5442591
+sample estimates:
+mean of x 
+0.5432258 
+
+##### Tsugaru shamisen x Audio-Visual x high-variance: Testing for versus at chance (50%) #####
+	One Sample t-test
+
+data:  df_stats$score[idx]
+t = 9.6465, df = 159, p-value < 2.2e-16
+alternative hypothesis: true mean is not equal to 0.5
+5 percent confidence interval:
+ 0.6875211 0.6899789
+sample estimates:
+mean of x 
+  0.68875 
+
+##### Tsugaru shamisen x Audio-Visual x low-variance: Testing for versus at chance (50%) #####
+	One Sample t-test
+
+data:  df_stats$score[idx]
+t = 2.4771, df = 159, p-value = 0.01429
+alternative hypothesis: true mean is not equal to 0.5
+5 percent confidence interval:
+ 0.543859 0.546141
+sample estimates:
+mean of x 
+    0.545 
+
+##### Tsugaru shamisen x Visual-only x high-variance: Testing for versus at chance (50%) #####
+	One Sample t-test
+
+data:  df_stats$score[idx]
+t = 3.3345, df = 154, p-value = 0.001071
+alternative hypothesis: true mean is not equal to 0.5
+5 percent confidence interval:
+ 0.5626679 0.5650740
+sample estimates:
+mean of x 
+ 0.563871 
+
+##### Tsugaru shamisen x Visual-only x low-variance: Testing for versus at chance (50%) #####
+	One Sample t-test
+
+data:  df_stats$score[idx]
+t = 2.7141, df = 154, p-value = 0.007405
+alternative hypothesis: true mean is not equal to 0.5
+5 percent confidence interval:
+ 0.5472673 0.5495069
+sample estimates:
+mean of x 
+0.5483871 
+

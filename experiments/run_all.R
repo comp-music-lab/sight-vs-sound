@@ -12,6 +12,8 @@ FILEID <- "cnfm"
 source("plot_data.R")
 source("analysis.R")
 
+source("versusAtChance.R")
+
 ### Exploratory analysis
 DATAID_INVALID <- c()
 FILEID <- "explr"
