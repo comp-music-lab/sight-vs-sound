@@ -1,4 +1,4 @@
-### Create a data set excluding bot suspicious data and inappropriate data
+### Apply exclusion criteria
 rm(list = ls())
 OUTPUTDIR <- "./output/without_suspicious/"
 
