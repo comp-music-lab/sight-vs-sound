@@ -1,3 +1,6 @@
+### Install libraries
+source("install_lib.R")
+
 ### Apply exclusion criteria
 rm(list = ls())
 OUTPUTDIR <- "./output/without_suspicious/"
