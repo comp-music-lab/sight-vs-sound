@@ -28,7 +28,7 @@
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper      T p.value
 BM   0.728 0.768 0.808 11.162       0
-PERM 0.728 0.768 0.808 11.162       0
+PERM 0.728 0.768 0.809 11.162       0
 
 ***Paired t-test (exploratory analysis)***
 
@@ -76,7 +76,7 @@ mean difference
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper      T p.value
 BM   0.425 0.476 0.528 -0.761   0.448
-PERM 0.425 0.476 0.528 -0.761   0.441
+PERM 0.424 0.476 0.529 -0.761   0.450
 
 ***Paired t-test (exploratory analysis)***
 
@@ -181,7 +181,7 @@ Coordinate system already present. Adding new coordinate system, which will repl
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper     T p.value
 BM   0.453 0.506 0.559 0.194   0.847
-PERM 0.454 0.506 0.559 0.194   0.842
+PERM 0.454 0.506 0.559 0.194   0.843
 
 ***Paired t-test (exploratory analysis)***
 
@@ -229,7 +229,7 @@ mean difference
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper      T p.value
 BM   0.347 0.396 0.445 -3.498   0.001
-PERM 0.347 0.396 0.445 -3.498   0.000
+PERM 0.347 0.396 0.445 -3.498   0.001
 
 ***Paired t-test (exploratory analysis)***
 
@@ -305,11 +305,11 @@ Variance         9.528882  1 0.002022633
 Domain:Variance  8.328079  1 0.003903692
 Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 [1] ""
-[1] "Piano x low-variance"             "Piano x high-variance"            "Piano"                            "Tsugaru shamisen x low-variance" 
-[5] "Tsugaru shamisen x high-variance" "Tsugaru shamisen"                
+[1] "Piano x low-variance"             "Piano x high-variance"            "Piano"                           
+[4] "Tsugaru shamisen x low-variance"  "Tsugaru shamisen x high-variance" "Tsugaru shamisen"                
 
 p-value
-[1] 0.000000e+00 2.300000e-01 1.602930e-11 4.210000e-01 0.000000e+00 3.903692e-03
+[1] 0.000000e+00 2.200000e-01 1.602930e-11 4.200000e-01 0.000000e+00 3.903692e-03
 
 Relative effect (1, 2, 4, 5) and ANOVA-type statistic (3, 6)
 [1]  0.768000  0.476000 45.404166  0.506000  0.396000  8.328079
@@ -322,3 +322,127 @@ Effect size corresponding to Cohen's D (1, 2, 4, 5) and partial eta squared (3, 
 
 90% CI of adjusted partial eta squared (equivalence testing for the interaction effects of Tsugaru shamisen)
 0.000846790535529669 - 0.0118519719904702 - 0.0309293329493695
+
+###### Nonparametric multiple comparisons (Piano) ######
+
+ #----------------Nonparametric Multiple Comparisons for relative effects---------------# 
+ 
+ - Alternative Hypothesis:  True differences of relative effects are greater than 0 
+ - Estimation Method:  Global Pseudo Ranks 
+ - Type of Contrast : UserDefined 
+ - Confidence Level: 95 % 
+ - Method = Adjusted log odds with 308 DF 
+ 
+ #--------------------------------------------------------------------------------------# 
+ 
+
+ #----------------Nonparametric Multiple Comparisons for relative effects---------------# 
+ 
+ - Alternative Hypothesis:  True differences of relative effects are greater than 0 
+ - Estimation Method: Global Pseudo ranks 
+ - Type of Contrast : UserDefined 
+ - Confidence Level: 95 % 
+ - Method = Adjusted log odds with 308 DF 
+ 
+ #--------------------------------------------------------------------------------------# 
+ 
+ #----Data Info-------------------------------------------------------------------------# 
+                       Sample Size    Effect     Lower     Upper
+1  Audio-only x high-variance  155 0.5518939 0.5189218 0.5844159
+2 Visual-only x high-variance  155 0.5283975 0.4958929 0.5606631
+3   Audio-only x low-variance  155 0.3327159 0.3070783 0.3593839
+4  Visual-only x low-variance  155 0.5869927 0.5577067 0.6156759
+
+ #----Contrast--------------------------------------------------------------------------# 
+    Audio-only x high-variance Visual-only x high-variance Audio-only x low-variance Visual-only x low-variance
+C 1                          1                          -1                         0                          0
+C 2                          0                           0                        -1                          1
+
+ #----Analysis--------------------------------------------------------------------------# 
+    Estimator   Lower Upper Statistic      p.Value
+C 1    0.0556 -0.7968   Inf    0.7074 4.227458e-01
+C 2    0.6154 -0.0881   Inf    9.4893 2.220446e-16
+
+ #----Overall---------------------------------------------------------------------------# 
+  Quantile      p.Value
+1 10.84694 2.220446e-16
+
+ #--------------------------------------------------------------------------------------# 
+
+ #----------------Nonparametric Multiple Comparisons for relative effects---------------# 
+ 
+ - Alternative Hypothesis:  True differences of relative effects are not equal to 0 
+ - Estimation Method:  Global Pseudo Ranks 
+ - Type of Contrast : UserDefined 
+ - Confidence Level: 90 % 
+ - Method = Adjusted log odds with 308 DF 
+ 
+ #--------------------------------------------------------------------------------------# 
+ 
+
+## 90% confidence interval information for equivalence testing ##
+    Estimator   Lower  Upper Statistic      p.Value
+C 1    0.0556 -0.0981 0.2093    0.7074 7.291517e-01
+C 2    0.6154  0.4886 0.7423    9.4893 2.220446e-16
+
+###### Nonparametric multiple comparisons (Tsugaru-shamisen) ######
+
+ #----------------Nonparametric Multiple Comparisons for relative effects---------------# 
+ 
+ - Alternative Hypothesis:  True differences of relative effects are greater than 0 
+ - Estimation Method:  Global Pseudo Ranks 
+ - Type of Contrast : UserDefined 
+ - Confidence Level: 95 % 
+ - Method = Adjusted log odds with 304 DF 
+ 
+ #--------------------------------------------------------------------------------------# 
+ 
+
+ #----------------Nonparametric Multiple Comparisons for relative effects---------------# 
+ 
+ - Alternative Hypothesis:  True differences of relative effects are greater than 0 
+ - Estimation Method: Global Pseudo ranks 
+ - Type of Contrast : UserDefined 
+ - Confidence Level: 95 % 
+ - Method = Adjusted log odds with 304 DF 
+ 
+ #--------------------------------------------------------------------------------------# 
+ 
+ #----Data Info-------------------------------------------------------------------------# 
+                       Sample Size    Effect     Lower     Upper
+1  Audio-only x high-variance  155 0.5903226 0.5578688 0.6220082
+2 Visual-only x high-variance  155 0.4841207 0.4520273 0.5163456
+3   Audio-only x low-variance  155 0.4591988 0.4296159 0.4890720
+4  Visual-only x low-variance  155 0.4663580 0.4351148 0.4978673
+
+ #----Contrast--------------------------------------------------------------------------# 
+    Audio-only x high-variance Visual-only x high-variance Audio-only x low-variance Visual-only x low-variance
+C 1                          1                          -1                         0                          0
+C 2                          0                           0                        -1                          1
+
+ #----Analysis--------------------------------------------------------------------------# 
+    Estimator   Lower Upper Statistic     p.Value
+C 1    0.2520 -0.5857   Inf    3.2592 0.001243582
+C 2    0.0169 -0.7517   Inf    0.2385 0.646957322
+
+ #----Overall---------------------------------------------------------------------------# 
+  Quantile     p.Value
+1 10.83511 0.001243582
+
+ #--------------------------------------------------------------------------------------# 
+
+ #----------------Nonparametric Multiple Comparisons for relative effects---------------# 
+ 
+ - Alternative Hypothesis:  True differences of relative effects are not equal to 0 
+ - Estimation Method:  Global Pseudo Ranks 
+ - Type of Contrast : UserDefined 
+ - Confidence Level: 90 % 
+ - Method = Adjusted log odds with 304 DF 
+ 
+ #--------------------------------------------------------------------------------------# 
+ 
+
+## 90% confidence interval information for equivalence testing ##
+    Estimator   Lower  Upper Statistic     p.Value
+C 1    0.2520  0.1007 0.4032    3.2592 0.002486214
+C 2    0.0169 -0.1218 0.1557    0.2385 0.964464071

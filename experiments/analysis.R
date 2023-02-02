@@ -205,4 +205,36 @@ cat("\n90% CI of adjusted partial eta squared (equivalence testing for the inter
 cat(paste(petasq_lu_list[2, 1], " - ", es_conv_list[6], " - ", petasq_lu_list[2, 2], sep = ""))
 cat("\n")
 
+###### Exploratory analysis: Nonparametric multiple comparisons ######
+Cq = rbind(c(1, -1, 0, 0), c(0, 0, -1, 1))
+
+for (i in 1:2) {
+  if (i == 1) {
+    cat("\n###### Nonparametric multiple comparisons (Piano) ######\n")
+    df_i <- df_stats[df_stats$instrument == "Piano", ]
+  }
+  else if (i == 2) {
+    cat("\n###### Nonparametric multiple comparisons (Tsugaru-shamisen) ######\n")
+    df_i <- df_stats[df_stats$instrument == "Tsugaru shamisen", ]
+  } 
+  
+  df_i$group <- paste(df_i$domain, " x ", df_i$varcond, sep = "")
+  df_i$group <- factor(df_i$group,
+                      levels = c("Audio-only x high-variance", "Visual-only x high-variance",
+                                 "Audio-only x low-variance", "Visual-only x low-variance"))
+  
+  # test
+  q_i <- mctp(score~group, df_i, type = "UserDefined", conf.level = 0.95,
+              alternative = "greater", asy.method = "log.odds", plot.simci = TRUE,
+              rounds = 4, contrast.matrix = Cq, effect = "unweighted")
+  summary(q_i)
+  
+  # equivalence test information
+  q_i <- mctp(score~group, df_i, type = "UserDefined", conf.level = 0.90,
+              alternative = "two.sided", asy.method = "log.odds", plot.simci = TRUE,
+              rounds = 4, contrast.matrix = Cq, effect = "unweighted")
+  cat("\n## 90% confidence interval information for equivalence testing ##\n")
+  print(q_i$Analysis)
+}
+
 closeAllConnections()

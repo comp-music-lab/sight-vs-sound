@@ -76,7 +76,7 @@ mean difference
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper      T p.value
 BM   0.425 0.476 0.528 -0.761   0.448
-PERM 0.424 0.476 0.529 -0.761   0.438
+PERM 0.425 0.476 0.528 -0.761   0.447
 
 ***Paired t-test (exploratory analysis)***
 
@@ -181,7 +181,7 @@ Coordinate system already present. Adding new coordinate system, which will repl
 ***Check confidence intervals for equivalence testing***
      Lower p.hat Upper     T p.value
 BM   0.453 0.506 0.559 0.194   0.847
-PERM 0.454 0.506 0.558 0.194   0.844
+PERM 0.453 0.506 0.559 0.194   0.847
 
 ***Paired t-test (exploratory analysis)***
 
@@ -305,11 +305,11 @@ Variance         9.528882  1 0.002022633
 Domain:Variance  8.328079  1 0.003903692
 Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 [1] ""
-[1] "Piano x low-variance"             "Piano x high-variance"            "Piano"                            "Tsugaru shamisen x low-variance" 
-[5] "Tsugaru shamisen x high-variance" "Tsugaru shamisen"                
+[1] "Piano x low-variance"             "Piano x high-variance"            "Piano"                           
+[4] "Tsugaru shamisen x low-variance"  "Tsugaru shamisen x high-variance" "Tsugaru shamisen"                
 
 p-value
-[1] 0.000000e+00 2.260000e-01 4.881470e-07 4.290000e-01 0.000000e+00 3.903692e-03
+[1] 0.000000e+00 2.250000e-01 4.881470e-07 4.150000e-01 0.000000e+00 3.903692e-03
 
 Relative effect (1, 2, 4, 5) and ANOVA-type statistic (3, 6)
 [1]  0.693000  0.476000 25.310096  0.506000  0.396000  8.328079
@@ -322,3 +322,127 @@ Effect size corresponding to Cohen's D (1, 2, 4, 5) and partial eta squared (3, 
 
 90% CI of adjusted partial eta squared (equivalence testing for the interaction effects of Tsugaru shamisen)
 0.000846790535529669 - 0.0118519719904702 - 0.0309293329493695
+
+###### Nonparametric multiple comparisons (Piano) ######
+
+ #----------------Nonparametric Multiple Comparisons for relative effects---------------# 
+ 
+ - Alternative Hypothesis:  True differences of relative effects are greater than 0 
+ - Estimation Method:  Global Pseudo Ranks 
+ - Type of Contrast : UserDefined 
+ - Confidence Level: 95 % 
+ - Method = Adjusted log odds with 308 DF 
+ 
+ #--------------------------------------------------------------------------------------# 
+ 
+
+ #----------------Nonparametric Multiple Comparisons for relative effects---------------# 
+ 
+ - Alternative Hypothesis:  True differences of relative effects are greater than 0 
+ - Estimation Method: Global Pseudo ranks 
+ - Type of Contrast : UserDefined 
+ - Confidence Level: 95 % 
+ - Method = Adjusted log odds with 308 DF 
+ 
+ #--------------------------------------------------------------------------------------# 
+ 
+ #----Data Info-------------------------------------------------------------------------# 
+                       Sample Size    Effect     Lower     Upper
+1  Audio-only x high-variance  155 0.5488345 0.5179329 0.5793640
+2 Visual-only x high-variance  155 0.5269875 0.4964893 0.5572857
+3   Audio-only x low-variance  155 0.3628668 0.3342211 0.3925202
+4  Visual-only x low-variance  155 0.5613111 0.5295995 0.5925298
+
+ #----Contrast--------------------------------------------------------------------------# 
+    Audio-only x high-variance Visual-only x high-variance Audio-only x low-variance Visual-only x low-variance
+C 1                          1                          -1                         0                          0
+C 2                          0                           0                        -1                          1
+
+ #----Analysis--------------------------------------------------------------------------# 
+    Estimator   Lower Upper Statistic      p.Value
+C 1    0.0516 -0.7276   Inf    0.7187 4.172139e-01
+C 2    0.4756 -0.3257   Inf    6.4350 4.719047e-10
+
+ #----Overall---------------------------------------------------------------------------# 
+  Quantile      p.Value
+1 10.84237 4.719047e-10
+
+ #--------------------------------------------------------------------------------------# 
+
+ #----------------Nonparametric Multiple Comparisons for relative effects---------------# 
+ 
+ - Alternative Hypothesis:  True differences of relative effects are not equal to 0 
+ - Estimation Method:  Global Pseudo Ranks 
+ - Type of Contrast : UserDefined 
+ - Confidence Level: 90 % 
+ - Method = Adjusted log odds with 308 DF 
+ 
+ #--------------------------------------------------------------------------------------# 
+ 
+
+## 90% confidence interval information for equivalence testing ##
+    Estimator   Lower  Upper Statistic      p.Value
+C 1    0.0516 -0.0889 0.1922    0.7187 7.218215e-01
+C 2    0.4756  0.3310 0.6201    6.4350 9.438088e-10
+
+###### Nonparametric multiple comparisons (Tsugaru-shamisen) ######
+
+ #----------------Nonparametric Multiple Comparisons for relative effects---------------# 
+ 
+ - Alternative Hypothesis:  True differences of relative effects are greater than 0 
+ - Estimation Method:  Global Pseudo Ranks 
+ - Type of Contrast : UserDefined 
+ - Confidence Level: 95 % 
+ - Method = Adjusted log odds with 304 DF 
+ 
+ #--------------------------------------------------------------------------------------# 
+ 
+
+ #----------------Nonparametric Multiple Comparisons for relative effects---------------# 
+ 
+ - Alternative Hypothesis:  True differences of relative effects are greater than 0 
+ - Estimation Method: Global Pseudo ranks 
+ - Type of Contrast : UserDefined 
+ - Confidence Level: 95 % 
+ - Method = Adjusted log odds with 304 DF 
+ 
+ #--------------------------------------------------------------------------------------# 
+ 
+ #----Data Info-------------------------------------------------------------------------# 
+                       Sample Size    Effect     Lower     Upper
+1  Audio-only x high-variance  155 0.5903226 0.5578688 0.6220082
+2 Visual-only x high-variance  155 0.4841207 0.4520273 0.5163456
+3   Audio-only x low-variance  155 0.4591988 0.4296159 0.4890720
+4  Visual-only x low-variance  155 0.4663580 0.4351148 0.4978673
+
+ #----Contrast--------------------------------------------------------------------------# 
+    Audio-only x high-variance Visual-only x high-variance Audio-only x low-variance Visual-only x low-variance
+C 1                          1                          -1                         0                          0
+C 2                          0                           0                        -1                          1
+
+ #----Analysis--------------------------------------------------------------------------# 
+    Estimator   Lower Upper Statistic     p.Value
+C 1    0.2520 -0.5857   Inf    3.2592 0.001243582
+C 2    0.0169 -0.7517   Inf    0.2385 0.646957322
+
+ #----Overall---------------------------------------------------------------------------# 
+  Quantile     p.Value
+1 10.83511 0.001243582
+
+ #--------------------------------------------------------------------------------------# 
+
+ #----------------Nonparametric Multiple Comparisons for relative effects---------------# 
+ 
+ - Alternative Hypothesis:  True differences of relative effects are not equal to 0 
+ - Estimation Method:  Global Pseudo Ranks 
+ - Type of Contrast : UserDefined 
+ - Confidence Level: 90 % 
+ - Method = Adjusted log odds with 304 DF 
+ 
+ #--------------------------------------------------------------------------------------# 
+ 
+
+## 90% confidence interval information for equivalence testing ##
+    Estimator   Lower  Upper Statistic     p.Value
+C 1    0.2520  0.1007 0.4032    3.2592 0.002486214
+C 2    0.0169 -0.1218 0.1557    0.2385 0.964464071
