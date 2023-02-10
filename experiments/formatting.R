@@ -46,27 +46,30 @@ if(!all(sapply(strsplit(substring(S[idx_1st_AV, 4], 1), "-"), function(x){return
 
 df_performer <- rbind(
   data.frame(data_id = as.numeric(sapply(strsplit(substring(S[idx_1st_AO, 2], 1), "-"), function(x){return(x[[1]][1])})),
-             performer_1 = S[idx_1st_AO, 8], performer_2 = S[idx_2nd_AO, 8]),
+             performer_1 = S[idx_1st_AO, 8], performer_2 = S[idx_2nd_AO, 8],
+             performer_1_sex = S[idx_1st_AO, 9], performer_2_sex = S[idx_2nd_AO, 9]),
   data.frame(data_id = as.numeric(sapply(strsplit(substring(S[idx_1st_VO, 3], 1), "-"), function(x){return(x[[1]][1])})),
-             performer_1 = S[idx_1st_VO, 8], performer_2 = S[idx_2nd_VO, 8]),
+             performer_1 = S[idx_1st_VO, 8], performer_2 = S[idx_2nd_VO, 8],
+             performer_1_sex = S[idx_1st_VO, 9], performer_2_sex = S[idx_2nd_VO, 9]),
   data.frame(data_id = as.numeric(sapply(strsplit(substring(S[idx_1st_AV, 4], 1), "-"), function(x){return(x[[1]][1])})),
-             performer_1 = S[idx_1st_AV, 8], performer_2 = S[idx_2nd_AV, 8])
+             performer_1 = S[idx_1st_AV, 8], performer_2 = S[idx_2nd_AV, 8],
+             performer_1_sex = S[idx_1st_AV, 9], performer_2_sex = S[idx_2nd_AV, 9])
 )
 
 df_stimuli <- rbind(
             unique(data.frame(data_id = as.numeric(sapply(strsplit(substring(S[, 2], 1), "-"), function(x){return(x[[1]][1])})),
-                              instrument = S[, 9],
-                              varcond = S[, 11],
+                              instrument = S[, 10],
+                              varcond = S[, 12],
                               domain = "Audio-only",
                               competition = S[, 5])),
             unique(data.frame(data_id = as.numeric(sapply(strsplit(substring(S[, 3], 1), "-"), function(x){return(x[[1]][1])})),
-                              instrument = S[, 9],
-                              varcond = S[, 11],
+                              instrument = S[, 10],
+                              varcond = S[, 12],
                               domain = "Visual-only",
                               competition = S[, 5])),
             unique(data.frame(data_id = as.numeric(sapply(strsplit(substring(S[, 4], 1), "-"), function(x){return(x[[1]][1])})),
-                              instrument = S[, 9],
-                              varcond = S[, 11],
+                              instrument = S[, 10],
+                              varcond = S[, 12],
                               domain = "Audio-Visual",
                               competition = S[, 5]))
 )
@@ -84,7 +87,8 @@ df_data <- data.frame(participant_id = as.numeric(), data_id = as.numeric(), ord
                       answer = as.numeric(), score = as.numeric(),
                       instrument = as.character(), domain = as.character(),
                       varcond = as.character(), competitoin = as.character(),
-                      performer_1 = as.character(), performer_2 = as.character())
+                      performer_1 = as.character(), performer_2 = as.character(),
+                      performer_1_sex = as.character(), performer_2_sex = as.character())
 
 for (m in 1:length(T)) {
   NUM_PARTICIPANT <- nrow(T[[m]])
@@ -138,6 +142,8 @@ for (m in 1:length(T)) {
     df_i$competition <- df_stimuli$competition[df_i$data_id]
     df_i$performer_1 <- df_performer$performer_1[df_i$data_id]
     df_i$performer_2 <- df_performer$performer_2[df_i$data_id]
+    df_i$performer_1_sex <- df_performer$performer_1_sex[df_i$data_id]
+    df_i$performer_2_sex <- df_performer$performer_2_sex[df_i$data_id]
     
     df_data <- rbind(df_data, df_i)
   }
@@ -148,7 +154,9 @@ for (m in 1:length(T)) {
        !all(df_stimuli$instrument[df_stimuli$data_id == j] == df_data$instrument[df_data$data_id == j]) ||
        !all(df_stimuli$competition[df_stimuli$data_id == j] == df_data$competition[df_data$data_id == j]) ||
        !all(df_stimuli$performer_1[df_stimuli$data_id == j] == df_performer$performer_1[df_data$data_id == j]) ||
-       !all(df_stimuli$performer_2[df_stimuli$data_id == j] == df_performer$performer_2[df_data$data_id == j])) {
+       !all(df_stimuli$performer_2[df_stimuli$data_id == j] == df_performer$performer_2[df_data$data_id == j]) ||
+       !all(df_stimuli$performer_1_sex[df_stimuli$data_id == j] == df_performer$performer_1_sex[df_data$data_id == j]) ||
+       !all(df_stimuli$performer_2_sex[df_stimuli$data_id == j] == df_performer$performer_2_sex[df_data$data_id == j])) {
       print("df_data data frame is not valid");
       return()
     }

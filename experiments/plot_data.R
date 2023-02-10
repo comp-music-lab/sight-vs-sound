@@ -58,10 +58,12 @@ for (i in 1:length(COMPETITION_LIST)) {
 ###### [Figure 4] Data formatting by summarizing by performer pairs ######
 tmp <- df_data
 tmp$performer_pair <- paste(tmp$performer_1, ' - ', tmp$performer_2, sep = "")
-df_pair <- aggregate(tmp$score, by = list(tmp$data_id, tmp$domain, tmp$varcond, tmp$instrument, tmp$performer_pair), FUN = mean)
+df_pair <- aggregate(tmp$score, by = list(tmp$data_id, tmp$domain, tmp$varcond, tmp$instrument, tmp$performer_pair,
+                                          paste(substr(tmp$performer_1_sex, 1, 1), substr(tmp$performer_2_sex, 1, 1), sep = "")), FUN = mean)
 
-names(df_pair) <- c("DataID", "Domain", "Variance", "Instrument", "Pair", "score")
+names(df_pair) <- c("DataID", "Domain", "Variance", "Instrument", "Pair", "Gender", "score")
 df_pair$clipID <- (((df_pair$DataID - 1)%%25) + 1)
+df_pair$Gender <- gsub("F", "♀", gsub("M", "♂", df_pair$Gender))
 
 df_pair <- df_pair[order(df_pair$clipID), ]
 df_pair <- df_pair[df_pair$clipID %in% intersect(df_pair$clipID[df_pair$Domain == "Audio-only"], df_pair$clipID[df_pair$Domain == "Visual-only"]), ]
@@ -69,13 +71,15 @@ df_pair <- df_pair[df_pair$clipID %in% intersect(df_pair$clipID[df_pair$Domain =
 df_CLIPORDER <- data.frame(clipID = unique(df_pair[c("clipID")])$clipID,
                            Pair = unique(df_pair[c("Pair", "clipID")])$Pair,
                            AVscorediff = df_pair$score[df_pair$Domain == "Audio-only"] - df_pair$score[df_pair$Domain == "Visual-only"],
-                           Instrument = unique(df_pair[c("Instrument", "clipID")])$Instrument
+                           Instrument = unique(df_pair[c("Instrument", "clipID")])$Instrument,
+                           Gender = unique(df_pair[c("clipID", "Gender")])$Gender
                            )
 df_CLIPORDER$plotname <- sapply(
         strsplit(df_CLIPORDER$Pair, " - "), function(x) return(
         paste(sapply(strsplit(x, " "), function(y) return(paste(substring(y[1], 1, 1), ".", substring(y[2], 1, 1), ".", sep = ""))), collapse = "\nvs\n")
       )
     )
+df_CLIPORDER$plotname <- paste(df_CLIPORDER$plotname, "\n", df_CLIPORDER$Gender, sep = "")
 df_CLIPORDER$plotname[df_CLIPORDER$clipID %in% c(21:25)] <- paste(df_CLIPORDER$plotname[df_CLIPORDER$clipID %in% c(21:25)], "\n*", sep="")
 
 df_CLIPORDER <- df_CLIPORDER[order(df_CLIPORDER$AVscorediff, decreasing = TRUE), ]
